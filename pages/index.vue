@@ -1,8 +1,241 @@
 <template>
-  <div
-    class="flex items-center justify-center min-h-screen bg-gray-200"
-    :style="{ minHeight: 'calc(100vh - 400px)' }"
-  >
-    <h1 class="text-4xl font-bold text-purple-600">Солнечные сказки</h1>
-  </div>
+  <main class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
+    <!-- Hero Section -->
+    <section
+      class="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden"
+    >
+      <!-- Background pattern -->
+      <div class="absolute inset-0 bg-gray-900 opacity-80"></div>
+      <div
+        class="absolute inset-0 bg-[url('/path/to/texture.png')] opacity-10"
+      ></div>
+
+      <!-- Hero Content -->
+      <div class="relative container mx-auto px-6 text-center text-white">
+        <h1 class="text-5xl md:text-7xl font-serif mb-6">Солнечные сказки</h1>
+        <p
+          class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto font-light"
+        >
+          Погрузитесь в мир поэзии, где каждое слово — это луч света, освещающий
+          глубины души
+        </p>
+        <a
+          href="/"
+          class="inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group"
+        >
+          Начать чтение
+          <i
+            class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"
+          ></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- Featured Poems Section -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-6">
+        <div class="flex items-center justify-center mb-12">
+          <div class="h-px w-12 bg-amber-500/30"></div>
+          <h2 class="text-3xl font-serif text-gray-900 px-4">
+            Избранные стихи
+          </h2>
+          <div class="h-px w-12 bg-amber-500/30"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div v-for="poem in featuredPoems" :key="poem.id" class="group">
+            <article
+              class="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
+            >
+              <p class="text-sm text-amber-600 mb-2">{{ poem.category }}</p>
+              <h3
+                class="text-xl font-serif text-gray-900 mb-3 group-hover:text-amber-600 transition-colors"
+              >
+                {{ poem.title }}
+              </h3>
+              <p class="text-gray-600 mb-4 line-clamp-3">{{ poem.excerpt }}</p>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-gray-500">{{ poem.date }}</span>
+                <a
+                  href="#"
+                  class="text-amber-600 hover:text-amber-700 transition-colors"
+                >
+                  Читать полностью
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="py-20 bg-gray-900 text-white">
+      <div class="container mx-auto px-6 text-center">
+        <i class="fas fa-quote-left text-4xl text-amber-500/50 mb-6"></i>
+        <blockquote
+          class="text-2xl md:text-3xl font-serif mb-6 max-w-3xl mx-auto"
+        >
+          "Поэзия — это живопись, которую слышат, а живопись — это поэзия,
+          которую видят."
+        </blockquote>
+        <cite class="text-gray-400">— Леонардо да Винчи</cite>
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-serif text-center text-gray-900 mb-12">
+          Категории
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <a
+            v-for="category in categories"
+            :key="category.id"
+            :href="category.url"
+            class="group relative h-48 rounded-lg overflow-hidden"
+          >
+            <!-- Category background -->
+            <div
+              class="absolute inset-0 bg-gray-900 opacity-60 group-hover:opacity-70 transition-opacity"
+            ></div>
+
+            <!-- Category content -->
+            <div
+              class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
+            >
+              <i :class="['text-3xl mb-3 text-amber-400', category.icon]"></i>
+              <h3 class="text-xl font-serif text-white mb-2">
+                {{ category.name }}
+              </h3>
+              <p class="text-sm text-gray-300">
+                {{ category.count }} стихотворений
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Blog Posts -->
+    <section class="py-16 bg-white">
+      <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-serif text-center text-gray-900 mb-12">
+          Блог о поэзии
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <article v-for="post in blogPosts" :key="post.id" class="group">
+            <a href="#" class="block">
+              <div
+                class="aspect-w-16 aspect-h-9 mb-4 rounded-lg overflow-hidden bg-gray-200"
+              >
+                <img
+                  src="https://media.newyorker.com/photos/5b968681dbd07a5060baef83/master/w_2560%2Cc_limit/NBA-Poetry-2018.jpg"
+                  :alt="post.title"
+                  class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3
+                class="text-xl font-serif text-gray-900 mb-2 group-hover:text-amber-600 transition-colors"
+              >
+                {{ post.title }}
+              </h3>
+              <p class="text-gray-600 mb-3">{{ post.excerpt }}</p>
+              <div class="flex items-center text-sm text-gray-500">
+                <i class="far fa-calendar-alt mr-2"></i>
+                {{ post.date }}
+              </div>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gray-900">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-serif text-white mb-4">
+          Оставайтесь вдохновленными
+        </h2>
+        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+          Подпишитесь на нашу рассылку, чтобы получать новые стихи, литературные
+          новости и приглашения на поэтические вечера
+        </p>
+        <form class="max-w-md mx-auto flex">
+          <input
+            type="email"
+            placeholder="Ваш email..."
+            class="flex-1 px-4 py-3 rounded-l-lg bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+          />
+          <button
+            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-r-lg transition-colors duration-300"
+          >
+            Подписаться
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
 </template>
+
+<script setup>
+const featuredPoems = [
+  {
+    id: 1,
+    title: "Летний закат",
+    category: "Пейзажная лирика",
+    excerpt: "В лучах заката тает день, и небо красками играет...",
+    date: "15 января 2024",
+  },
+  {
+    id: 2,
+    title: "Зимний сон",
+    category: "Философская лирика",
+    excerpt:
+      "Под белым покрывалом спит земля, в молчании храня свои секреты...",
+    date: "12 января 2024",
+  },
+  {
+    id: 3,
+    title: "Морской бриз",
+    category: "Романтическая поэзия",
+    excerpt: "Соленый ветер треплет паруса, и чайки реют над волнами...",
+    date: "10 января 2024",
+  },
+];
+
+const categories = [
+  { id: 1, name: "Пейзажная лирика", count: 24, icon: "fas fa-tree", url: "#" },
+  {
+    id: 2,
+    name: "Философская лирика",
+    count: 18,
+    icon: "fas fa-brain",
+    url: "#",
+  },
+  { id: 3, name: "Любовная поэзия", count: 32, icon: "fas fa-heart", url: "#" },
+  { id: 4, name: "Городские мотивы", count: 15, icon: "fas fa-city", url: "#" },
+];
+
+const blogPosts = [
+  {
+    id: 1,
+    title: "Как написать свое первое стихотворение",
+    excerpt: "Советы начинающим поэтам и основы стихосложения...",
+    date: "14 января 2024",
+  },
+  {
+    id: 2,
+    title: "История русской поэзии",
+    excerpt: "Путешествие через века русской литературы...",
+    date: "11 января 2024",
+  },
+  {
+    id: 3,
+    title: "Современная поэзия в цифровую эпоху",
+    excerpt: "Как технологии влияют на развитие поэзии...",
+    date: "8 января 2024",
+  },
+];
+</script>
