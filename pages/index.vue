@@ -20,7 +20,7 @@
           глубины души
         </p>
         <a
-          href="/"
+          href="/poems"
           class="inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group"
         >
           Начать чтение
