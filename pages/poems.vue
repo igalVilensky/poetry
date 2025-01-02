@@ -1,14 +1,14 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-50"
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
   >
     <!-- Hero Section with Background -->
     <div
-      class="relative overflow-hidden bg-gradient-to-r from-amber-500 via-amber-600 to-amber-800"
+      class="relative overflow-hidden bg-gradient-to-r from-slate-700 via-slate-800 to-amber-800"
     >
       <!-- Optional subtle texture overlay -->
       <div
-        class="absolute inset-0 opacity-50 bg-[linear-gradient(30deg,rgba(255,255,255,0.1)_12%,transparent_12.5%,transparent_87%,rgba(255,255,255,0.1)_87.5%,rgba(255,255,255,0.1)_0)] bg-[length:8px_8px]"
+        class="absolute inset-0 opacity-50 bg-[linear-gradient(30deg,rgba(253,224,71,0.1)_12%,transparent_12.5%,transparent_87%,rgba(253,224,71,0.1)_87.5%,rgba(253,224,71,0.1)_0)] bg-[length:8px_8px]"
       ></div>
 
       <div class="relative container mx-auto px-6 py-12 sm:py-24 text-center">
@@ -23,19 +23,19 @@
         </p>
       </div>
     </div>
+
     <!-- Новые стихи Section -->
-    <section class="py-16 bg-amber-50 relative overflow-hidden">
+    <section class="py-16 bg-slate-100 relative overflow-hidden">
       <div class="container mx-auto px-6 relative z-10">
-        <h2 class="text-4xl font-serif text-center mb-12 text-amber-900">
+        <h2 class="text-4xl font-serif text-center mb-12 text-slate-900">
           Новые стихи
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <article
             v-for="newPoem in newPoems"
             :key="newPoem.id"
-            class="bg-white rounded-2xl border border-amber-200 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
-            <!-- Visual element for each poem -->
             <div class="mb-4">
               <div
                 class="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center mx-auto"
@@ -54,7 +54,7 @@
             <div class="flex justify-center">
               <nuxt-link
                 :to="`/poems/${newPoem.id}`"
-                class="px-6 py-3 rounded-full bg-amber-300 text-amber-900 font-medium hover:bg-amber-400 transition-colors duration-300"
+                class="px-6 py-3 rounded-full bg-amber-300 text-slate-900 font-medium hover:bg-amber-400 transition-colors duration-300"
               >
                 Читать полностью
               </nuxt-link>
@@ -68,45 +68,48 @@
         class="absolute inset-0 bg-[radial-gradient(rgba(253,224,71,0.2)_15%,transparent_16%)] bg-[length:15px_15px] opacity-25"
       ></div>
     </section>
+
     <div class="container mx-auto px-6 py-16">
       <div class="flex flex-col lg:flex-row gap-12">
         <!-- Years Navigation -->
         <aside class="lg:w-72 flex-shrink-0">
           <div class="sticky top-8">
-            <h2 class="text-xl font-serif mb-6 text-gray-900">
+            <h2 class="text-xl font-serif mb-6 text-slate-900">
               Архив по годам
             </h2>
             <nav
-              class="space-y-1 bg-white/80 backdrop-blur-lg rounded-xl border border-amber-200 shadow-md overflow-hidden"
+              class="space-y-1 bg-white/80 backdrop-blur-lg rounded-xl border border-slate-200 shadow-md overflow-hidden"
             >
               <button
                 class="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-amber-100 hover:shadow-lg"
                 :class="[
                   selectedYear === 'all'
-                    ? 'bg-amber-200 text-amber-900 font-medium'
-                    : 'text-gray-700',
+                    ? 'bg-amber-200 text-slate-900 font-medium'
+                    : 'text-slate-600',
                 ]"
                 @click="selectedYear = 'all'"
               >
                 <span class="font-serif">Все произведения</span>
-                <span class="text-sm bg-white px-3 py-1 rounded-full shadow-sm">
+                <span
+                  class="text-sm bg-slate-100 px-3 py-1 rounded-full shadow-sm"
+                >
                   {{ totalPoemCount }}
                 </span>
               </button>
 
               <div v-for="year in years" :key="year.value">
                 <button
-                  class="w-full flex items-center justify-between px-6 py-4 transition-all border-t border-amber-50 hover:bg-amber-100 hover:shadow-lg"
+                  class="w-full flex items-center justify-between px-6 py-4 transition-all border-t border-slate-100 hover:bg-amber-100 hover:shadow-lg"
                   :class="[
                     selectedYear === year.value
-                      ? 'bg-amber-200 text-amber-900 font-medium'
-                      : 'text-gray-700',
+                      ? 'bg-amber-200 text-slate-900 font-medium'
+                      : 'text-slate-600',
                   ]"
                   @click="selectedYear = year.value"
                 >
                   <span class="font-serif">{{ year.value }}</span>
                   <span
-                    class="text-sm bg-white px-3 py-1 rounded-full shadow-sm"
+                    class="text-sm bg-slate-100 px-3 py-1 rounded-full shadow-sm"
                   >
                     {{ year.count }}
                   </span>
@@ -125,7 +128,7 @@
             <article
               v-for="poem in filteredPoems"
               :key="poem.id"
-              class="group bg-white rounded-xl border border-amber-200 hover:shadow-xl transition-all duration-300 hover:bg-amber-50"
+              class="group bg-white rounded-xl border border-slate-200 hover:shadow-xl transition-all duration-300 hover:bg-amber-50"
             >
               <div class="p-6">
                 <div class="flex items-center justify-between mb-4">
@@ -139,21 +142,21 @@
                 </div>
 
                 <h2
-                  class="text-2xl font-serif text-gray-900 mb-4 leading-tight group-hover:text-amber-600 transition-colors"
+                  class="text-2xl font-serif text-slate-900 mb-4 leading-tight group-hover:text-amber-600 transition-colors"
                 >
                   {{ poem.title }}
                 </h2>
 
                 <p
-                  class="text-gray-600 text-lg leading-relaxed mb-6 font-serif line-clamp-4"
+                  class="text-slate-600 text-lg leading-relaxed mb-6 font-serif line-clamp-4"
                 >
                   {{ poem.excerpt }}
                 </p>
 
                 <div
-                  class="flex items-center justify-between pt-6 border-t border-amber-200"
+                  class="flex items-center justify-between pt-6 border-t border-slate-200"
                 >
-                  <div class="flex items-center space-x-4 text-gray-500">
+                  <div class="flex items-center space-x-4 text-slate-500">
                     <span class="flex items-center">
                       <i class="far fa-eye mr-2"></i>
                       {{ poem.views }}
@@ -166,7 +169,7 @@
 
                   <nuxt-link
                     :to="`/poems/${poem.id}`"
-                    class="inline-flex items-center px-6 py-2 rounded-lg bg-amber-200 text-amber-900 hover:bg-amber-300 font-medium transition-all"
+                    class="inline-flex items-center px-6 py-2 rounded-lg bg-amber-200 text-slate-900 hover:text-amber-200 hover:bg-slate-700 font-medium transition-all"
                   >
                     Читать
                     <i class="fas fa-arrow-right ml-2"></i>
@@ -179,13 +182,13 @@
           <!-- Empty State -->
           <div
             v-else
-            class="text-center py-24 bg-white/80 backdrop-blur-lg rounded-xl border border-amber-200 shadow-md"
+            class="text-center py-24 bg-white/80 backdrop-blur-lg rounded-xl border border-slate-200 shadow-md"
           >
             <div class="text-6xl mb-6">📝</div>
-            <h3 class="text-2xl font-serif text-gray-900 mb-3">
+            <h3 class="text-2xl font-serif text-slate-900 mb-3">
               Стихотворения не найдены
             </h3>
-            <p class="text-gray-500 text-lg">
+            <p class="text-slate-500 text-lg">
               Попробуйте изменить параметры поиска
             </p>
           </div>
