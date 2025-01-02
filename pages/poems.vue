@@ -23,7 +23,51 @@
         </p>
       </div>
     </div>
+    <!-- Новые стихи Section -->
+    <section class="py-16 bg-amber-50 relative overflow-hidden">
+      <div class="container mx-auto px-6 relative z-10">
+        <h2 class="text-4xl font-serif text-center mb-12 text-amber-900">
+          Новые стихи
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <article
+            v-for="newPoem in newPoems"
+            :key="newPoem.id"
+            class="bg-white rounded-2xl border border-amber-200 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+          >
+            <!-- Visual element for each poem -->
+            <div class="mb-4">
+              <div
+                class="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center mx-auto"
+              >
+                <i class="fas fa-feather-alt text-amber-800 text-xl"></i>
+              </div>
+            </div>
 
+            <h3 class="text-2xl font-serif text-amber-700 mb-6 text-center">
+              {{ newPoem.title }}
+            </h3>
+            <p class="text-gray-700 mb-6 text-justify lg:line-clamp-none">
+              {{ newPoem.excerpt }}
+            </p>
+
+            <div class="flex justify-center">
+              <nuxt-link
+                :to="`/poems/${newPoem.id}`"
+                class="px-6 py-3 rounded-full bg-amber-300 text-amber-900 font-medium hover:bg-amber-400 transition-colors duration-300"
+              >
+                Читать полностью
+              </nuxt-link>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Background visual effect -->
+      <div
+        class="absolute inset-0 bg-[radial-gradient(rgba(253,224,71,0.2)_15%,transparent_16%)] bg-[length:15px_15px] opacity-25"
+      ></div>
+    </section>
     <div class="container mx-auto px-6 py-16">
       <div class="flex flex-col lg:flex-row gap-12">
         <!-- Years Navigation -->
@@ -188,7 +232,7 @@ const poems = ref([
     year: 2022,
   },
   {
-    id: 3,
+    id: 4,
     title: "Морской бриз",
     date: "28 июля 2022",
     category: "Романтическая поэзия",
@@ -196,6 +240,66 @@ const poems = ref([
     views: 372,
     likes: 45,
     year: 2021,
+  },
+  {
+    id: 5,
+    title: "Весенний рассвет",
+    date: "10 марта 2024",
+    category: "Пейзажная лирика",
+    excerpt: "Рассвет встаёт над лугами, пробуждая от сна всю природу...",
+    views: 120,
+    likes: 30,
+    year: 2024,
+  },
+  {
+    id: 6,
+    title: "Осенние думы",
+    date: "25 сентября 2023",
+    category: "Философская лирика",
+    excerpt: "Листья падают тихо, как мысли в моей голове...",
+    views: 210,
+    likes: 27,
+    year: 2023,
+  },
+  {
+    id: 7,
+    title: "Лунный путь",
+    date: "14 февраля 2022",
+    category: "Романтическая поэзия",
+    excerpt: "Луна ведёт меня по тропе, где каждый шаг - это любовь...",
+    views: 350,
+    likes: 60,
+    year: 2022,
+  },
+  {
+    id: 8,
+    title: "Город ночью",
+    date: "5 ноября 2021",
+    category: "Городская лирика",
+    excerpt: "Ночь освещает город, и каждый свет - это мечта...",
+    views: 400,
+    likes: 48,
+    year: 2021,
+  },
+  {
+    id: 9,
+    title: "Дождь воспоминаний",
+    date: "8 августа 2020",
+    category: "Ностальгическая поэзия",
+    excerpt: "Капли дождя стучат по окну, будто воспоминания о прошлом...",
+    views: 320,
+    likes: 35,
+    year: 2020,
+  },
+  {
+    id: 10,
+    title: "Путь сквозь туман",
+    date: "2 января 2025",
+    category: "Метафорическая лирика",
+    excerpt: "В тумане каждый шаг - вопрос, а каждый ответ - новый рассвет...",
+    views: 90,
+    likes: 18,
+    year: 2025,
   },
 ]);
 
@@ -230,6 +334,13 @@ const filteredPoems = computed(() => {
 
     return matchesSearch && matchesYear;
   });
+});
+
+// New poems for the 'Новые стихи' section
+const newPoems = computed(() => {
+  return poems.value
+    .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date in descending order
+    .slice(0, 3); // Take the first 4 (which are now the most recent)
 });
 
 const getCategoryClass = (category) => {
