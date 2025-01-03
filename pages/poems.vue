@@ -233,7 +233,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import backgroundImage from "../assets/images/backgroundImage.jpg";
+import backgroundImage from "../assets/images/background.jpg";
 // Sample data - replace with your actual data
 const poems = ref([
   {
