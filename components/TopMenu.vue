@@ -5,15 +5,15 @@
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
       <!-- Logo -->
       <div class="text-2xl font-serif">
-        <a
-          href="/"
+        <NuxtLink
+          to="/"
           class="hover:text-amber-400 transition-colors duration-300 relative group"
         >
           Солнечные сказки
           <span
             class="absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
           ></span>
-        </a>
+        </NuxtLink>
       </div>
 
       <!-- Hamburger Icon (Mobile) -->
@@ -36,17 +36,19 @@
         ]"
       >
         <!-- Links -->
-        <a
+        <NuxtLink
           v-for="(link, index) in links"
           :key="index"
-          :href="link.href"
+          :to="link.href"
           class="text-lg hover:text-amber-400 block md:inline transition-colors duration-300 relative group"
+          exact-active-class="text-amber-400"
         >
           {{ link.text }}
           <span
             class="absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 hidden md:block"
+            :class="{ 'scale-x-100': $route.path === link.href }"
           ></span>
-        </a>
+        </NuxtLink>
 
         <!-- Search Bar for Mobile -->
         <div class="block md:hidden">
@@ -82,7 +84,6 @@
 import { ref } from "vue";
 
 const menuOpen = ref(false);
-
 const links = [
   { text: "Главная", href: "/" },
   { text: "Стихи", href: "/poems" },
