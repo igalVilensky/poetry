@@ -3,7 +3,7 @@
     class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
   >
     <!-- Hero Section with Parallax Effect -->
-    <div class="relative h-[40vh] sm:h-[50vh] overflow-hidden">
+    <div class="relative h-[60vh] sm:h-[50vh] overflow-hidden">
       <div
         class="absolute inset-0 bg-cover bg-center"
         :style="{ backgroundImage: `url(${backgroundImage})` }"

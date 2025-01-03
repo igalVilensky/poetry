@@ -1,27 +1,41 @@
 <template>
   <main class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
     <!-- Hero Section -->
-    <section
-      class="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden"
-    >
-      <!-- Background pattern -->
-      <div class="absolute inset-0 bg-gray-900 opacity-80"></div>
+    <div class="relative h-[60vh] sm:h-[50vh] overflow-hidden">
       <div
-        class="absolute inset-0 bg-[url('/path/to/texture.png')] opacity-10"
+        class="absolute inset-0 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${backgroundImage})` }"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"
       ></div>
 
-      <!-- Hero Content -->
-      <div class="relative container mx-auto px-6 text-center text-white">
-        <h1 class="text-5xl md:text-7xl font-serif mb-6">Солнечные сказки</h1>
+      <!-- Animated patterns -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 opacity-30 animate-pulse">
+          <div
+            class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        class="relative h-full container mx-auto px-6 flex flex-col justify-center items-center"
+      >
+        <h1
+          class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center"
+        >
+          Солнечные <span class="text-amber-300">сказки</span>
+        </h1>
         <p
-          class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto font-light"
+          class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light"
         >
           Погрузитесь в мир поэзии, где каждое слово — это луч света, освещающий
           глубины души
         </p>
         <a
           href="/poems"
-          class="inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group"
+          class="mt-8 inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group"
         >
           Начать чтение
           <i
@@ -29,7 +43,7 @@
           ></i>
         </a>
       </div>
-    </section>
+    </div>
 
     <!-- Featured Poems Section -->
     <section class="py-16 bg-white">
@@ -180,6 +194,8 @@
 </template>
 
 <script setup>
+import backgroundImage from "../assets/images/background.jpg";
+
 const featuredPoems = [
   {
     id: 1,
