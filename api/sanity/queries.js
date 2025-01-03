@@ -7,7 +7,8 @@ export const POSTS_QUERY = `*[
     title,
     slug,
     publishedAt,
-
-   
+    image,
+    category,
+    readtime,
     author
    }`;
