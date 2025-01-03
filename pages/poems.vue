@@ -2,59 +2,79 @@
   <div
     class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
   >
-    <!-- Hero Section with Background -->
-    <div
-      class="relative overflow-hidden bg-gradient-to-r from-slate-700 via-slate-800 to-amber-800"
-    >
-      <!-- Optional subtle texture overlay -->
+    <!-- Hero Section with Parallax Effect -->
+    <div class="relative h-[40vh] sm:h-[50vh] overflow-hidden">
       <div
-        class="absolute inset-0 opacity-50 bg-[linear-gradient(30deg,rgba(253,224,71,0.1)_12%,transparent_12.5%,transparent_87%,rgba(253,224,71,0.1)_87.5%,rgba(253,224,71,0.1)_0)] bg-[length:8px_8px]"
+        class="absolute inset-0 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${backgroundImage})` }"
+      ></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"
       ></div>
 
-      <div class="relative container mx-auto px-6 py-12 sm:py-24 text-center">
+      <!-- Animated patterns -->
+      <div class="absolute inset-0">
+        <div class="absolute inset-0 opacity-30 animate-pulse">
+          <div
+            class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]"
+          ></div>
+        </div>
+      </div>
+
+      <div
+        class="relative h-full container mx-auto px-6 flex flex-col justify-center items-center"
+      >
         <h1
-          class="text-4xl sm:text-5xl md:text-6xl font-serif mb-6 leading-tight text-white"
+          class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center"
         >
-          Коллекция поэзии
+          Коллекция <span class="text-amber-300">поэзии</span>
         </h1>
-        <p class="text-amber-100 max-w-2xl mx-auto sm:text-lg leading-relaxed">
+        <p
+          class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light"
+        >
           Исследуйте мир поэзии через времена, где каждое стихотворение — это
           окно в новую реальность.
         </p>
       </div>
     </div>
 
-    <!-- Новые стихи Section -->
-    <section class="py-16 bg-slate-100 relative overflow-hidden">
+    <!-- Featured Poems Section -->
+    <section class="py-20 relative overflow-hidden">
       <div class="container mx-auto px-6 relative z-10">
-        <h2 class="text-4xl font-serif text-center mb-12 text-slate-900">
-          Новые стихи
-        </h2>
+        <div class="flex items-center justify-center mb-16">
+          <div class="text-center">
+            <h2 class="text-4xl font-serif mb-4 text-slate-900">Новые стихи</h2>
+            <div class="w-24 h-1 bg-amber-300 mx-auto rounded-full"></div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <article
             v-for="newPoem in newPoems"
             :key="newPoem.id"
-            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            class="group bg-white rounded-2xl border border-slate-200 p-8 shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
           >
-            <div class="mb-4">
+            <div class="mb-6">
               <div
-                class="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center mx-auto"
+                class="w-16 h-16 bg-gradient-to-br from-amber-200 to-amber-300 rounded-2xl flex items-center justify-center mx-auto transform -rotate-6 group-hover:rotate-0 transition-transform duration-500"
               >
-                <i class="fas fa-feather-alt text-amber-800 text-xl"></i>
+                <i class="fas fa-feather-alt text-amber-800 text-2xl"></i>
               </div>
             </div>
 
-            <h3 class="text-2xl font-serif text-amber-700 mb-6 text-center">
+            <h3
+              class="text-2xl font-serif text-slate-800 mb-4 text-center group-hover:text-amber-700 transition-colors"
+            >
               {{ newPoem.title }}
             </h3>
-            <p class="text-gray-700 mb-6 text-justify lg:line-clamp-none">
+            <p class="text-slate-600 mb-6 text-justify line-clamp-4 font-light">
               {{ newPoem.excerpt }}
             </p>
 
             <div class="flex justify-center">
               <nuxt-link
                 :to="`/poems/${newPoem.id}`"
-                class="px-6 py-3 rounded-full bg-amber-300 text-slate-900 font-medium hover:bg-amber-400 transition-colors duration-300"
+                class="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-white font-medium hover:from-amber-500 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 Читать полностью
               </nuxt-link>
@@ -62,59 +82,66 @@
           </article>
         </div>
       </div>
-
-      <!-- Background visual effect -->
-      <div
-        class="absolute inset-0 bg-[radial-gradient(rgba(253,224,71,0.2)_15%,transparent_16%)] bg-[length:15px_15px] opacity-25"
-      ></div>
     </section>
 
+    <!-- Main Content Section -->
     <div class="container mx-auto px-6 py-16">
       <div class="flex flex-col lg:flex-row gap-12">
         <!-- Years Navigation -->
-        <aside class="lg:w-72 flex-shrink-0">
+        <aside class="lg:w-80 flex-shrink-0">
           <div class="sticky top-8">
-            <h2 class="text-xl font-serif mb-6 text-slate-900">
+            <h2
+              class="text-2xl font-serif mb-6 text-slate-900 flex items-center"
+            >
+              <span class="w-2 h-8 bg-amber-400 rounded-r-full mr-4"></span>
               Архив по годам
             </h2>
-            <nav
-              class="space-y-1 bg-white/80 backdrop-blur-lg rounded-xl border border-slate-200 shadow-md overflow-hidden"
-            >
+            <nav class="space-y-2">
               <button
-                class="w-full flex items-center justify-between px-6 py-4 transition-all hover:bg-amber-100 hover:shadow-lg"
+                class="w-full flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300"
                 :class="[
                   selectedYear === 'all'
-                    ? 'bg-amber-200 text-slate-900 font-medium'
-                    : 'text-slate-600',
+                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg'
+                    : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200',
                 ]"
                 @click="selectedYear = 'all'"
               >
                 <span class="font-serif">Все произведения</span>
                 <span
-                  class="text-sm bg-slate-100 px-3 py-1 rounded-full shadow-sm"
+                  class="text-sm px-3 py-1 rounded-full"
+                  :class="[
+                    selectedYear === 'all'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-slate-100 text-slate-600',
+                  ]"
                 >
                   {{ totalPoemCount }}
                 </span>
               </button>
 
-              <div v-for="year in years" :key="year.value">
-                <button
-                  class="w-full flex items-center justify-between px-6 py-4 transition-all border-t border-slate-100 hover:bg-amber-100 hover:shadow-lg"
+              <button
+                v-for="year in years"
+                :key="year.value"
+                class="w-full flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300"
+                :class="[
+                  selectedYear === year.value
+                    ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg'
+                    : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200',
+                ]"
+                @click="selectedYear = year.value"
+              >
+                <span class="font-serif">{{ year.value }}</span>
+                <span
+                  class="text-sm px-3 py-1 rounded-full"
                   :class="[
                     selectedYear === year.value
-                      ? 'bg-amber-200 text-slate-900 font-medium'
-                      : 'text-slate-600',
+                      ? 'bg-white/20 text-white'
+                      : 'bg-slate-100 text-slate-600',
                   ]"
-                  @click="selectedYear = year.value"
                 >
-                  <span class="font-serif">{{ year.value }}</span>
-                  <span
-                    class="text-sm bg-slate-100 px-3 py-1 rounded-full shadow-sm"
-                  >
-                    {{ year.count }}
-                  </span>
-                </button>
-              </div>
+                  {{ year.count }}
+                </span>
+              </button>
             </nav>
           </div>
         </aside>
@@ -128,17 +155,17 @@
             <article
               v-for="poem in filteredPoems"
               :key="poem.id"
-              class="group bg-white rounded-xl border border-slate-200 hover:shadow-xl transition-all duration-300 hover:bg-amber-50"
+              class="group bg-white rounded-xl border border-slate-200 hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
             >
               <div class="p-6">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center justify-between mb-6">
                   <span
                     :class="getCategoryClass(poem.category)"
                     class="px-4 py-1.5 text-sm font-medium rounded-full"
                   >
                     {{ poem.category }}
                   </span>
-                  <p class="text-sm text-gray-500">{{ poem.date }}</p>
+                  <p class="text-sm text-slate-500">{{ poem.date }}</p>
                 </div>
 
                 <h2
@@ -148,7 +175,7 @@
                 </h2>
 
                 <p
-                  class="text-slate-600 text-lg leading-relaxed mb-6 font-serif line-clamp-4"
+                  class="text-slate-600 text-lg leading-relaxed mb-6 font-light line-clamp-4"
                 >
                   {{ poem.excerpt }}
                 </p>
@@ -156,12 +183,16 @@
                 <div
                   class="flex items-center justify-between pt-6 border-t border-slate-200"
                 >
-                  <div class="flex items-center space-x-4 text-slate-500">
-                    <span class="flex items-center">
+                  <div class="flex items-center space-x-6 text-slate-500">
+                    <span
+                      class="flex items-center group-hover:text-amber-600 transition-colors"
+                    >
                       <i class="far fa-eye mr-2"></i>
                       {{ poem.views }}
                     </span>
-                    <span class="flex items-center">
+                    <span
+                      class="flex items-center group-hover:text-amber-600 transition-colors"
+                    >
                       <i class="far fa-heart mr-2"></i>
                       {{ poem.likes }}
                     </span>
@@ -169,10 +200,12 @@
 
                   <nuxt-link
                     :to="`/poems/${poem.id}`"
-                    class="inline-flex items-center px-6 py-2 rounded-lg bg-amber-200 text-slate-900 hover:text-amber-200 hover:bg-slate-700 font-medium transition-all"
+                    class="inline-flex items-center px-6 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-amber-500 hover:text-white font-medium transition-all duration-300"
                   >
                     Читать
-                    <i class="fas fa-arrow-right ml-2"></i>
+                    <i
+                      class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"
+                    ></i>
                   </nuxt-link>
                 </div>
               </div>
@@ -182,9 +215,9 @@
           <!-- Empty State -->
           <div
             v-else
-            class="text-center py-24 bg-white/80 backdrop-blur-lg rounded-xl border border-slate-200 shadow-md"
+            class="text-center py-24 bg-white rounded-xl border border-slate-200 shadow-md"
           >
-            <div class="text-6xl mb-6">📝</div>
+            <div class="text-6xl mb-6 animate-bounce">📝</div>
             <h3 class="text-2xl font-serif text-slate-900 mb-3">
               Стихотворения не найдены
             </h3>
@@ -200,7 +233,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-
+import backgroundImage from "../assets/images/backgroundImage.jpg";
 // Sample data - replace with your actual data
 const poems = ref([
   {
@@ -351,6 +384,9 @@ const getCategoryClass = (category) => {
     "Пейзажная лирика": "bg-green-100 text-green-800",
     "Философская лирика": "bg-blue-100 text-blue-800",
     "Романтическая поэзия": "bg-pink-100 text-pink-800",
+    "Городская лирика": "bg-purple-100 text-purple-800",
+    "Ностальгическая поэзия": "bg-yellow-100 text-yellow-800",
+    "Метафорическая лирика": "bg-indigo-100 text-indigo-800",
   };
   return classes[category] || "bg-gray-100 text-gray-800";
 };
