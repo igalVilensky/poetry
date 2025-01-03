@@ -1,4 +1,13 @@
 <template>
+  <div>
+    <div v-if="loading">Loading...</div>
+    <div v-else-if="error">Error: {{ error.message }}</div>
+    <div v-else>
+      <ul>
+        <li v-for="poem in posts" :key="poem._id">{{ poem }}</li>
+      </ul>
+    </div>
+  </div>
   <div
     class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
   >
@@ -234,6 +243,15 @@
 <script setup>
 import { ref, computed } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
+import { fetchPosts } from "~/api/sanity/posts";
+import { getImageUrl } from "~/api/sanity/client";
+// Fetch posts from Sanity
+const { data: posts, loading, error } = fetchPosts();
+
+// Get projectId and dataset from the Sanity client config
+const { projectId, dataset } = useSanity().client.config();
+const urlFor = getImageUrl(projectId, dataset);
+
 // Sample data - replace with your actual data
 const poems = ref([
   {

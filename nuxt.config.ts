@@ -12,4 +12,9 @@ export default defineNuxtConfig({
       autoprefixer: {}, // Include Autoprefixer for CSS
     },
   },
+  modules: ["@nuxtjs/sanity"],
+  sanity: {
+    projectId: "1r9tekm9", // Replace with your Sanity project ID
+    dataset: "production", // or your dataset name
+  },
 });
