@@ -10,5 +10,6 @@ export const POSTS_QUERY = `*[
     image,
     category,
     readtime,
-    author
+    author,
+    body
    }`;

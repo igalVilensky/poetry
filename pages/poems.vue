@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="loading">Loading...</div>
-    <div v-else-if="error">Error: {{ error.message }}</div>
     <div v-else>
       <div
         class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
@@ -77,8 +76,10 @@
                   class="text-slate-600 mb-6 text-justify line-clamp-4 font-light"
                 >
                   {{
-                    newPoem.content
-                      ? newPoem.content.slice(0, 100) + "..."
+                    newPoem.body &&
+                    newPoem.body[0] &&
+                    newPoem.body[0].children[0].text
+                      ? newPoem.body[0].children[0].text.slice(0, 100) + "..."
                       : "No excerpt available"
                   }}
                 </p>
@@ -197,8 +198,10 @@
                       class="text-slate-600 text-lg leading-relaxed mb-6 font-light line-clamp-4"
                     >
                       {{
-                        poem.content
-                          ? poem.content.slice(0, 100) + "..."
+                        poem.body &&
+                        poem.body[0] &&
+                        poem.body[0].children[0].text
+                          ? poem.body[0].children[0].text.slice(0, 100) + "..."
                           : "No content available"
                       }}
                     </p>
