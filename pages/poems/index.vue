@@ -279,7 +279,7 @@ const selectedYear = ref("all");
 // Computed for years based on the publishedAt date of posts
 const years = computed(() => {
   const yearCounts = {};
-  posts.value.forEach((post) => {
+  posts.value?.forEach((post) => {
     const year = new Date(post.publishedAt).getFullYear();
     yearCounts[year] = (yearCounts[year] || 0) + 1;
   });
@@ -292,7 +292,7 @@ const years = computed(() => {
     .sort((a, b) => b.value - a.value);
 });
 
-const totalPoemCount = computed(() => posts.value.length);
+const totalPoemCount = computed(() => posts.value?.length);
 
 // Computed for filtering poems based on search and year
 const filteredPoems = computed(() => {
@@ -313,7 +313,7 @@ const filteredPoems = computed(() => {
 // New poems for the 'Новые стихи' section
 const newPoems = computed(() => {
   return posts.value
-    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) // Sort by publishedAt in descending order
+    ?.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) // Sort by publishedAt in descending order
     .slice(0, 3); // Take the first 3 (which are now the most recent)
 });
 

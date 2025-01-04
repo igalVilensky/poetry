@@ -6,7 +6,7 @@
       @mousemove="handleParallax"
       ref="heroSection"
     >
-      <!-- Background Layers -->
+      <!-- Background Image -->
       <div
         class="absolute inset-0 bg-cover bg-center transform transition-transform duration-200"
         :style="{
@@ -14,6 +14,7 @@
           transform: `scale(1.1) translate(${parallaxX}px, ${parallaxY}px)`,
         }"
       ></div>
+      <!-- Overlay Gradient -->
       <div
         class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-amber-900/90"
       ></div>
@@ -58,6 +59,15 @@
             {{ post?.title }}
           </h1>
 
+          <!-- Author Name -->
+          <div
+            class="text-xl text-amber-100 font-medium"
+            :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0, delay: 100 }"
+          >
+            {{ post?.author }}
+          </div>
+
           <div
             class="flex flex-wrap items-center gap-4 text-amber-100"
             :initial="{ opacity: 0, y: 20 }"
@@ -89,14 +99,21 @@
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-16">
       <div class="max-w-3xl mx-auto">
+        <div v-if="post?.image" class="mb-8">
+          <img
+            :src="urlFor(post?.image)?.width(300).height(150).url()"
+            :alt="post?.title || 'Poem Image'"
+            class="w-full rounded-lg shadow-lg"
+          />
+        </div>
         <!-- Actions Bar -->
         <div
-          class="flex items-center justify-between mb-12 pb-6 border-b border-slate-200"
+          class="flex items-center justify-between mb-12 border-b border-slate-200"
         >
           <!-- Reading Time -->
           <div class="text-slate-500 text-sm">
             <i class="far fa-clock mr-2"></i>
-            {{ estimatedReadingTime }} минут чтения
+            {{ post.readtime }} чтения
           </div>
 
           <!-- Actions -->
@@ -158,14 +175,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import type { SanityDocument } from "@sanity/client";
+import imageUrlBuilder from "@sanity/image-url";
 import backgroundImage from "~/assets/images/background.jpg";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 // Props & Data
 const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0]`;
 const { params } = useRoute();
 const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, params);
+const { projectId, dataset } = useSanity().client.config();
 
 // State
 const heroSection = ref<HTMLElement | null>(null);
@@ -183,16 +203,6 @@ const sharePlatforms = [
   { name: "copy", label: "Копировать ссылку", icon: "far fa-copy" },
 ];
 
-// Computed
-const estimatedReadingTime = computed(() => {
-  if (!post.value?.body) return 0;
-  const words = post.value.body
-    .map((block) => block.children[0].text)
-    .join(" ")
-    .split(" ").length;
-  return Math.ceil(words / 200); // Assuming 200 words per minute
-});
-
 // Methods
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString("ru-RU", {
@@ -201,6 +211,11 @@ const formatDate = (date: string) => {
     year: "numeric",
   });
 };
+
+const urlFor = (source: SanityImageSource) =>
+  projectId && dataset
+    ? imageUrlBuilder({ projectId, dataset }).image(source)
+    : null;
 
 const handleParallax = (e: MouseEvent) => {
   if (!heroSection.value) return;
