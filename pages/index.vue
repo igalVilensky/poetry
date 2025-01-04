@@ -167,9 +167,9 @@
     </section>
     <!-- Testimonials -->
     <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div class="container mx-auto px-6">
+      <div class="container mx-auto px-4">
         <!-- Section Header -->
-        <div class="flex items-center justify-center mb-16">
+        <div class="flex items-center justify-center mb-12">
           <div class="h-px w-12 bg-amber-500/30"></div>
           <h2 class="text-3xl font-serif text-gray-900 px-4">
             Отзывы читателей
@@ -177,65 +177,88 @@
           <div class="h-px w-12 bg-amber-500/30"></div>
         </div>
 
-        <!-- Testimonials Slider -->
-        <div class="relative max-w-4xl mx-auto">
-          <!-- Navigation Buttons -->
-          <button
-            @click="prevSlide"
-            class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 lg:-translate-x-16 p-3 text-amber-600 hover:text-amber-700 transition-colors z-10"
-            :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }"
-            :disabled="currentIndex === 0"
+        <!-- Testimonials Slider Container -->
+        <div class="max-w-4xl mx-auto">
+          <!-- Main Content Area with Fixed Height -->
+          <div
+            class="h-[280px] sm:h-[240px] relative bg-white rounded-lg shadow-sm"
           >
-            <i class="fas fa-chevron-left text-2xl"></i>
-          </button>
-
-          <button
-            @click="nextSlide"
-            class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 lg:translate-x-16 p-3 text-amber-600 hover:text-amber-700 transition-colors z-10"
-            :class="{
-              'opacity-50 cursor-not-allowed':
-                currentIndex === testimonials.length - 1,
-            }"
-            :disabled="currentIndex === testimonials.length - 1"
-          >
-            <i class="fas fa-chevron-right text-2xl"></i>
-          </button>
-
-          <!-- Testimonials -->
-          <div class="overflow-hidden">
-            <TransitionGroup tag="div" name="slide" class="relative">
+            <TransitionGroup tag="div" name="slide" class="h-full">
               <div
                 v-for="(testimonial, index) in testimonials"
                 :key="testimonial.id"
                 v-show="currentIndex === index"
-                class="flex flex-col items-center text-center px-6"
+                class="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"
               >
-                <blockquote
-                  class="text-xl md:text-2xl text-gray-800 mb-6 font-serif italic"
-                >
-                  "{{ testimonial.quote }}"
-                </blockquote>
-                <cite class="not-italic font-medium text-gray-900">
-                  {{ testimonial.name }}
+                <!-- Quote Icon -->
+                <div class="text-amber-500/30">
+                  <i class="fas fa-quote-left text-3xl"></i>
+                </div>
+
+                <!-- Testimonial Content -->
+                <div class="flex-1 flex items-center justify-center px-4">
+                  <blockquote class="text-center">
+                    <p
+                      class="text-lg sm:text-xl text-gray-800 font-serif italic line-clamp-3"
+                    >
+                      "{{ testimonial.quote }}"
+                    </p>
+                  </blockquote>
+                </div>
+
+                <!-- Author -->
+                <cite class="block text-center not-italic">
+                  <span class="font-medium text-gray-900 block">{{
+                    testimonial.name
+                  }}</span>
+                  <span class="text-sm text-gray-500">{{
+                    testimonial.role
+                  }}</span>
                 </cite>
               </div>
             </TransitionGroup>
           </div>
 
-          <!-- Dots Navigation -->
-          <div class="flex justify-center space-x-2 mt-8">
+          <!-- Navigation - Below Content -->
+          <div class="mt-8 flex items-center justify-center gap-4">
+            <!-- Previous Button -->
             <button
-              v-for="(_, index) in testimonials"
-              :key="index"
-              @click="currentIndex = index"
-              class="w-2.5 h-2.5 rounded-full transition-all duration-300"
-              :class="
-                currentIndex === index
-                  ? 'bg-amber-500 w-6'
-                  : 'bg-amber-200 hover:bg-amber-300'
-              "
+              @click="prevSlide"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm hover:bg-gray-50 text-gray-600 transition-colors"
+              :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }"
+              :disabled="currentIndex === 0"
             >
-              <span class="sr-only">Testimonial {{ index + 1 }}</span>
+              <i class="fas fa-chevron-left text-sm"></i>
+            </button>
+
+            <!-- Dots -->
+            <div class="flex items-center gap-2">
+              <button
+                v-for="(_, index) in testimonials"
+                :key="index"
+                @click="currentIndex = index"
+                class="w-2 h-2 rounded-full transition-all duration-300"
+                :class="
+                  currentIndex === index
+                    ? 'bg-amber-500 w-4'
+                    : 'bg-gray-300 hover:bg-gray-400'
+                "
+              >
+                <span class="sr-only">Testimonial {{ index + 1 }}</span>
+              </button>
+            </div>
+
+            <!-- Next Button -->
+            <button
+              @click="nextSlide"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm hover:bg-gray-50 text-gray-600 transition-colors"
+              :class="{
+                'opacity-50 cursor-not-allowed':
+                  currentIndex === testimonials.length - 1,
+              }"
+              :disabled="currentIndex === testimonials.length - 1"
+            >
+              <i class="fas fa-chevron-right text-sm"></i>
             </button>
           </div>
         </div>
@@ -383,6 +406,18 @@ const testimonials = ref([
     quote:
       "Очень понравились Ваши стихи. С удовольствием прочитала. Удачи во всем и всегда буду рада видеть на своей страничке.",
     name: "Любовь П",
+  },
+  {
+    id: 8,
+    quote:
+      "Керен, с удовольствием и (одновременно) грустью несколько раз перечитал это стихотворение. Написано емко, образно, интересно и с подтекстом.Но часы все-таки не умолкают.Затихают - согласен, голос сердца, чувства доминирует, но время все равно идет.Хотя, конечно, 'умолкают' звучит сильнее.",
+    name: "Верный почитатель - Евгений",
+  },
+  {
+    id: 9,
+    quote:
+      "Истинно, поэзия которая завораживает! Трудно подобрать слова чтобы выразить восторг и удовольствие от ощущения этого волшебного потока. Спасибо автору огромное за возможность сопричастности и духовному обогащению....",
+    name: "Александр",
   },
 ]);
 
