@@ -162,7 +162,7 @@
             <!-- Poems Grid -->
             <main class="flex-1 max-w-4xl">
               <div
-                v-if="filteredPoems.length"
+                v-if="filteredPoems?.length"
                 class="grid grid-cols-1 md:grid-cols-2 gap-8"
               >
                 <article

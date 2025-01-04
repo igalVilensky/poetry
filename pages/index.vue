@@ -278,15 +278,18 @@ const { data: posts } = fetchPosts();
 
 const currentIndex = ref(0);
 
-// Last 3 Poems
+// Random 3 Poems
 const featuredPoems = computed(() => {
   if (!Array.isArray(posts.value)) {
     console.warn("posts.value is not an array:", posts.value);
     return []; // or return some default value or loading state indicator
   }
-  return posts.value
-    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) // Sort by publishedAt in descending order
-    .slice(0, 3) // Take the first 3 (which are now the most recent)
+
+  // Shuffle the array of posts to get random poems
+  const shuffledPosts = [...posts.value].sort(() => 0.5 - Math.random()); // Simple shuffle method
+
+  return shuffledPosts
+    .slice(0, 3) // Now slice the first 3 after shuffling
     .map((post) => ({
       id: post._id,
       title: post.title,

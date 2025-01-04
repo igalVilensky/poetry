@@ -9,7 +9,7 @@
         :style="{ backgroundImage: `url(${authorBackground})` }"
       ></div>
       <div
-        class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"
+        class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"
       ></div>
 
       <div class="relative h-full container mx-auto px-6">
@@ -27,7 +27,7 @@
           </div>
           <div class="text-center md:text-left">
             <p class="text-amber-200 text-xl md:text-2xl font-light mb-6">
-              Поэтесса • Писательница • Философ
+              Музыкант • Режиссер • Поэтесса
             </p>
             <div class="flex gap-4 justify-center md:justify-start">
               <a
