@@ -71,7 +71,7 @@
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-500">{{ poem.date }}</span>
                 <a
-                  href="#"
+                  :href="`/poems/${poem.slug.current}`"
                   class="text-amber-600 hover:text-amber-700 transition-colors"
                 >
                   Читать полностью
@@ -194,46 +194,74 @@
 </template>
 
 <script setup>
+import { ref, computed } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
+import { fetchPosts } from "~/api/sanity/posts";
 
-const featuredPoems = [
-  {
-    id: 1,
-    title: "Летний закат",
-    category: "Пейзажная лирика",
-    excerpt: "В лучах заката тает день, и небо красками играет...",
-    date: "15 января 2024",
-  },
-  {
-    id: 2,
-    title: "Зимний сон",
-    category: "Философская лирика",
-    excerpt:
-      "Под белым покрывалом спит земля, в молчании храня свои секреты...",
-    date: "12 января 2024",
-  },
-  {
-    id: 3,
-    title: "Морской бриз",
-    category: "Романтическая поэзия",
-    excerpt: "Соленый ветер треплет паруса, и чайки реют над волнами...",
-    date: "10 января 2024",
-  },
-];
+// Fetch posts from Sanity
+const { data: posts, loading, error } = fetchPosts();
 
-const categories = [
-  { id: 1, name: "Пейзажная лирика", count: 24, icon: "fas fa-tree", url: "#" },
-  {
-    id: 2,
-    name: "Философская лирика",
-    count: 18,
-    icon: "fas fa-brain",
-    url: "#",
-  },
-  { id: 3, name: "Любовная поэзия", count: 32, icon: "fas fa-heart", url: "#" },
-  { id: 4, name: "Городские мотивы", count: 15, icon: "fas fa-city", url: "#" },
-];
+// Computed properties for organizing data
 
+// Last 3 Poems
+const featuredPoems = computed(() => {
+  if (!Array.isArray(posts.value)) {
+    console.warn("posts.value is not an array:", posts.value);
+    return []; // or return some default value or loading state indicator
+  }
+  return posts.value
+    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) // Sort by publishedAt in descending order
+    .slice(0, 3) // Take the first 3 (which are now the most recent)
+    .map((post) => ({
+      id: post._id,
+      title: post.title,
+      slug: post.slug,
+      category: post.category || "Нет категории", // Default category if none provided
+      excerpt:
+        post.body && post.body[0] && post.body[0].children[0].text
+          ? post.body[0].children[0].text.slice(0, 100) + "..."
+          : "No excerpt available",
+      date: new Date(post.publishedAt).toLocaleDateString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+    }));
+});
+
+// Categories - This is a placeholder since we typically need to fetch categories separately or derive from posts
+const categories = computed(() => {
+  const uniqueCategories = [
+    ...new Set(posts.value?.map((post) => post.category).filter((c) => c)),
+  ];
+  return uniqueCategories.map((category, index) => ({
+    id: index + 1,
+    name: category,
+    count: posts.value.filter((p) => p.category === category).length,
+    icon: `fas fa-${["tree", "brain", "heart", "city"][index % 4]}`, // Assigning icons randomly for demonstration
+    url: `#${category.toLowerCase().replace(/\s+/g, "-")}`,
+  }));
+});
+
+// Blog Posts - Assuming blog posts are part of the same collection with a type 'blog'
+// const blogPosts = computed(() => {
+//   return posts.value
+//     ?.filter((post) => post.type === "blog") // Filter out only blog posts
+//     .map((post) => ({
+//       id: post._id,
+//       title: post.title,
+//       excerpt:
+//         post.body && post.body[0] && post.body[0].children[0].text
+//           ? post.body[0].children[0].text.slice(0, 100) + "..."
+//           : "No excerpt available",
+//       date: new Date(post.publishedAt).toLocaleDateString("ru-RU", {
+//         day: "numeric",
+//         month: "long",
+//         year: "numeric",
+//       }),
+//     }))
+//     .slice(0, 3); // Limit to 3 blog posts
+// });
 const blogPosts = [
   {
     id: 1,

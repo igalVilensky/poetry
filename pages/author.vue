@@ -150,7 +150,7 @@
 
 <script setup>
 import authorBackground from "../assets/images/background.jpg";
-import authorImage from "../assets/images/author.webp";
+import authorImage from "../assets/images/avatar.jpg";
 
 // Author Bio
 // Author Bio - Updated for Keren Vilenskaya

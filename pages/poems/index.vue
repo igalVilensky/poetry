@@ -30,7 +30,7 @@
             <h1
               class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center"
             >
-              Коллекция <span class="text-amber-300">поэзии</span>
+              Поэзия <span class="text-amber-300">внутреннего мира</span>
             </h1>
             <p
               class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light"
@@ -296,7 +296,7 @@ const totalPoemCount = computed(() => posts.value?.length);
 
 // Computed for filtering poems based on search and year
 const filteredPoems = computed(() => {
-  return posts.value.filter((post) => {
+  return posts.value?.filter((post) => {
     const matchesSearch = searchQuery.value
       ? post.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         post.content?.toLowerCase().includes(searchQuery.value.toLowerCase())
