@@ -190,6 +190,81 @@
         </form>
       </div>
     </section>
+    <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
+      <div class="container mx-auto px-6">
+        <!-- Section Header -->
+        <div class="flex items-center justify-center mb-16">
+          <div class="h-px w-12 bg-amber-500/30"></div>
+          <h2 class="text-3xl font-serif text-gray-900 px-4">
+            Отзывы читателей
+          </h2>
+          <div class="h-px w-12 bg-amber-500/30"></div>
+        </div>
+
+        <!-- Testimonials Slider -->
+        <div class="relative max-w-4xl mx-auto">
+          <!-- Navigation Buttons -->
+          <button
+            @click="prevSlide"
+            class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 lg:-translate-x-16 p-3 text-amber-600 hover:text-amber-700 transition-colors z-10"
+            :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }"
+            :disabled="currentIndex === 0"
+          >
+            <i class="fas fa-chevron-left text-2xl"></i>
+          </button>
+
+          <button
+            @click="nextSlide"
+            class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 lg:translate-x-16 p-3 text-amber-600 hover:text-amber-700 transition-colors z-10"
+            :class="{
+              'opacity-50 cursor-not-allowed':
+                currentIndex === testimonials.length - 1,
+            }"
+            :disabled="currentIndex === testimonials.length - 1"
+          >
+            <i class="fas fa-chevron-right text-2xl"></i>
+          </button>
+
+          <!-- Testimonials -->
+          <div class="overflow-hidden">
+            <TransitionGroup tag="div" name="slide" class="relative">
+              <div
+                v-for="(testimonial, index) in testimonials"
+                :key="testimonial.id"
+                v-show="currentIndex === index"
+                class="flex flex-col items-center text-center px-6"
+              >
+                <blockquote
+                  class="text-xl md:text-2xl text-gray-800 mb-6 font-serif italic"
+                >
+                  "{{ testimonial.quote }}"
+                </blockquote>
+                <cite class="not-italic font-medium text-gray-900">
+                  {{ testimonial.name }}
+                </cite>
+              </div>
+            </TransitionGroup>
+          </div>
+
+          <!-- Dots Navigation -->
+          <div class="flex justify-center space-x-2 mt-8">
+            <button
+              v-for="(_, index) in testimonials"
+              :key="index"
+              @click="currentIndex = index"
+              class="w-2.5 h-2.5 rounded-full transition-all duration-300"
+              :class="
+                currentIndex === index
+                  ? 'bg-amber-500 w-6'
+                  : 'bg-amber-200 hover:bg-amber-300'
+              "
+            >
+              <span class="sr-only">Testimonial {{ index + 1 }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </template>
 
@@ -199,9 +274,9 @@ import backgroundImage from "../assets/images/background.jpg";
 import { fetchPosts } from "~/api/sanity/posts";
 
 // Fetch posts from Sanity
-const { data: posts, loading, error } = fetchPosts();
+const { data: posts } = fetchPosts();
 
-// Computed properties for organizing data
+const currentIndex = ref(0);
 
 // Last 3 Poems
 const featuredPoems = computed(() => {
@@ -243,25 +318,6 @@ const categories = computed(() => {
   }));
 });
 
-// Blog Posts - Assuming blog posts are part of the same collection with a type 'blog'
-// const blogPosts = computed(() => {
-//   return posts.value
-//     ?.filter((post) => post.type === "blog") // Filter out only blog posts
-//     .map((post) => ({
-//       id: post._id,
-//       title: post.title,
-//       excerpt:
-//         post.body && post.body[0] && post.body[0].children[0].text
-//           ? post.body[0].children[0].text.slice(0, 100) + "..."
-//           : "No excerpt available",
-//       date: new Date(post.publishedAt).toLocaleDateString("ru-RU", {
-//         day: "numeric",
-//         month: "long",
-//         year: "numeric",
-//       }),
-//     }))
-//     .slice(0, 3); // Limit to 3 blog posts
-// });
 const blogPosts = [
   {
     id: 1,
@@ -282,4 +338,60 @@ const blogPosts = [
     date: "8 января 2024",
   },
 ];
+
+const testimonials = ref([
+  {
+    id: 1,
+    quote:
+      "Прекрасно ваше повествование в стихотворной форме и народном стиле. Прочитала с удовольствием и хочется продолжения. С уважением и сердечным теплом,",
+    name: "Галина Лычковская",
+  },
+  {
+    id: 2,
+    quote:
+      "Эти стихи, Керен, действительно, подлинные и значимые. В них - много всего. И берут звуками, всякой герменевтикой, не говоря о мастерстве., с каким они сделаны, собраны, поставлены.",
+    name: "Прокофьев Владимир ",
+  },
+  {
+    id: 3,
+    quote: "Ты как всегда Прекрасна во всех своих Творениях... ВеликоЛепна!",
+    name: "Волар Будха",
+  },
+  {
+    id: 4,
+    quote:
+      "Читаешь Ваше стихотворение и ощущаешь, как оно рождалось... как образ цеплялся за образ, метафора за метафору. В едином потоке ритма. С уважением,",
+    name: "Алексеева Татьяна",
+  },
+  {
+    id: 5,
+    quote:
+      "Мне понравилось. По моему это настоящие стихи. Поэзия тут присутствует. С уважением, Геннадий.",
+    name: "Геннадий Иваныч",
+  },
+  {
+    id: 6,
+    quote:
+      "Фантастические строчки...наверное за такую чуткость, ни один Шарик, не посмеет на вас рявкнуть.Такое поэтическое проникновение в мысли и настроение, наверняка понравится...и не только собачьей душе! Спасибо!",
+    name: "Александр Хижий",
+  },
+  {
+    id: 7,
+    quote:
+      "Очень понравились Ваши стихи. С удовольствием прочитала. Удачи во всем и всегда буду рада видеть на своей страничке.",
+    name: "Любовь П",
+  },
+]);
+
+const nextSlide = () => {
+  if (currentIndex.value < testimonials.value.length - 1) {
+    currentIndex.value++;
+  }
+};
+
+const prevSlide = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+  }
+};
 </script>
