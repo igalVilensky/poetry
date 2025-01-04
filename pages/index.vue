@@ -165,31 +165,7 @@
         </div>
       </div>
     </section>
-
-    <!-- Newsletter Section -->
-    <section class="py-20 bg-gray-900">
-      <div class="container mx-auto px-6 text-center">
-        <h2 class="text-3xl font-serif text-white mb-4">
-          Оставайтесь вдохновленными
-        </h2>
-        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
-          Подпишитесь на нашу рассылку, чтобы получать новые стихи, литературные
-          новости и приглашения на поэтические вечера
-        </p>
-        <form class="max-w-md mx-auto flex">
-          <input
-            type="email"
-            placeholder="Ваш email..."
-            class="flex-1 px-4 py-3 rounded-l-lg bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
-          />
-          <button
-            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-r-lg transition-colors duration-300"
-          >
-            Подписаться
-          </button>
-        </form>
-      </div>
-    </section>
+    <!-- Testimonials -->
     <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
       <div class="container mx-auto px-6">
         <!-- Section Header -->
@@ -263,6 +239,30 @@
             </button>
           </div>
         </div>
+      </div>
+    </section>
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-gray-900">
+      <div class="container mx-auto px-6 text-center">
+        <h2 class="text-3xl font-serif text-white mb-4">
+          Оставайтесь вдохновленными
+        </h2>
+        <p class="text-gray-400 mb-8 max-w-2xl mx-auto">
+          Подпишитесь на нашу рассылку, чтобы получать новые стихи, литературные
+          новости и приглашения на поэтические вечера
+        </p>
+        <form class="max-w-md mx-auto flex">
+          <input
+            type="email"
+            placeholder="Ваш email..."
+            class="flex-1 px-4 py-3 rounded-l-lg bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+          />
+          <button
+            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-r-lg transition-colors duration-300"
+          >
+            Подписаться
+          </button>
+        </form>
       </div>
     </section>
   </main>
