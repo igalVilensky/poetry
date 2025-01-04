@@ -179,6 +179,7 @@ const parallaxY = ref(0);
 const sharePlatforms = [
   { name: "twitter", label: "Twitter", icon: "fab fa-twitter" },
   { name: "facebook", label: "Facebook", icon: "fab fa-facebook" },
+  { name: "telegram", label: "Telegram", icon: "fab fa-telegram" },
   { name: "copy", label: "Копировать ссылку", icon: "far fa-copy" },
 ];
 
@@ -234,6 +235,9 @@ const shareOn = (platform: string) => {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
       url
     )}`,
+    telegram: `https://t.me/share/url?url=${encodeURIComponent(
+      url
+    )}&text=${encodeURIComponent(title)}`,
   };
 
   if (platform === "copy") {
