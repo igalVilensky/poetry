@@ -102,60 +102,143 @@
           <div class="flex flex-col lg:flex-row gap-12">
             <!-- Years Navigation -->
             <aside class="lg:w-80 flex-shrink-0">
-              <div class="sticky top-8">
-                <h2
-                  class="text-2xl font-serif mb-6 text-slate-900 flex items-center"
-                >
-                  <span class="w-2 h-8 bg-amber-400 rounded-r-full mr-4"></span>
-                  Архив по годам
-                </h2>
-                <nav class="space-y-2">
-                  <button
-                    class="w-full flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300"
-                    :class="[
-                      selectedYear === 'all'
-                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg'
-                        : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200',
-                    ]"
-                    @click="selectedYear = 'all'"
+              <div class="sticky top-8 space-y-6">
+                <!-- Total Poems Counter -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6">
+                  <h2
+                    class="text-2xl font-serif mb-2 text-slate-900 flex items-center"
                   >
-                    <span class="font-serif">Все произведения</span>
                     <span
-                      class="text-sm px-3 py-1 rounded-full"
-                      :class="[
-                        selectedYear === 'all'
-                          ? 'bg-white/20 text-white'
-                          : 'bg-slate-100 text-slate-600',
-                      ]"
-                    >
-                      {{ totalPoemCount }}
-                    </span>
-                  </button>
+                      class="w-2 h-8 bg-amber-400 rounded-r-full mr-4"
+                    ></span>
+                    Архив
+                  </h2>
+                  <div class="text-slate-600">
+                    Всего стихотворений:
+                    <span class="font-medium text-slate-900">{{
+                      totalPoemCount
+                    }}</span>
+                  </div>
+                </div>
 
-                  <button
-                    v-for="year in years"
-                    :key="year.value"
-                    class="w-full flex items-center justify-between px-6 py-4 rounded-xl transition-all duration-300"
-                    :class="[
-                      selectedYear === year.value
-                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-white shadow-lg'
-                        : 'bg-white text-slate-600 hover:bg-amber-50 border border-slate-200',
-                    ]"
-                    @click="selectedYear = year.value"
-                  >
-                    <span class="font-serif">{{ year.value }}</span>
-                    <span
-                      class="text-sm px-3 py-1 rounded-full"
-                      :class="[
-                        selectedYear === year.value
-                          ? 'bg-white/20 text-white'
-                          : 'bg-slate-100 text-slate-600',
-                      ]"
+                <!-- Year Selection -->
+                <div class="bg-white rounded-xl border border-slate-200 p-6">
+                  <h3 class="text-lg font-medium text-slate-900 mb-4">
+                    Выберите год
+                  </h3>
+
+                  <!-- Desktop: Custom Select UI -->
+                  <div class="hidden sm:block relative year-dropdown">
+                    <button
+                      @click.stop="toggleDropdown"
+                      class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white text-left flex items-center justify-between hover:border-amber-400 transition-colors"
                     >
-                      {{ year.count }}
-                    </span>
-                  </button>
-                </nav>
+                      <span class="font-medium text-slate-900">
+                        {{ selectedYear === "all" ? "Все годы" : selectedYear }}
+                      </span>
+                      <i
+                        class="fas fa-chevron-down text-slate-400 transition-transform duration-200"
+                        :class="{ 'rotate-180': isYearDropdownOpen }"
+                      ></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <Transition
+                      enter-active-class="transition duration-100 ease-out"
+                      enter-from-class="transform scale-95 opacity-0"
+                      enter-to-class="transform scale-100 opacity-100"
+                      leave-active-class="transition duration-75 ease-in"
+                      leave-from-class="transform scale-100 opacity-100"
+                      leave-to-class="transform scale-95 opacity-0"
+                    >
+                      <div
+                        v-show="isYearDropdownOpen"
+                        class="absolute z-10 w-full mt-2 bg-white border border-slate-200 rounded-lg shadow-lg py-2 max-h-64 overflow-y-auto"
+                      >
+                        <button
+                          @click="selectYear('all')"
+                          class="w-full px-4 py-2 text-left hover:bg-amber-50 transition-colors"
+                          :class="{
+                            'bg-amber-50 text-amber-700':
+                              selectedYear === 'all',
+                          }"
+                        >
+                          <div class="flex items-center justify-between">
+                            <span>Все годы</span>
+                            <span class="text-sm text-slate-500">{{
+                              totalPoemCount
+                            }}</span>
+                          </div>
+                        </button>
+
+                        <div v-for="year in years" :key="year.value">
+                          <button
+                            @click="selectYear(year.value)"
+                            class="w-full px-4 py-2 text-left hover:bg-amber-50 transition-colors"
+                            :class="{
+                              'bg-amber-50 text-amber-700':
+                                selectedYear === year.value,
+                            }"
+                          >
+                            <div class="flex items-center justify-between">
+                              <span>{{ year.value }}</span>
+                              <span class="text-sm text-slate-500">{{
+                                year.count
+                              }}</span>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </Transition>
+                  </div>
+
+                  <!-- Mobile: Native Select -->
+                  <div class="sm:hidden">
+                    <select
+                      v-model="selectedYear"
+                      class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white appearance-none"
+                    >
+                      <option value="all">
+                        Все годы ({{ totalPoemCount }})
+                      </option>
+                      <option
+                        v-for="year in years"
+                        :key="year.value"
+                        :value="year.value"
+                      >
+                        {{ year.value }} ({{ year.count }})
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Quick Stats -->
+                  <div class="mt-6 space-y-3">
+                    <div
+                      class="flex items-center justify-between text-sm text-slate-600"
+                    >
+                      <span>Самый ранний год:</span>
+                      <span class="font-medium text-slate-900">{{
+                        earliestYear
+                      }}</span>
+                    </div>
+                    <div
+                      class="flex items-center justify-between text-sm text-slate-600"
+                    >
+                      <span>Последний год:</span>
+                      <span class="font-medium text-slate-900">{{
+                        latestYear
+                      }}</span>
+                    </div>
+                    <div
+                      class="flex items-center justify-between text-sm text-slate-600"
+                    >
+                      <span>Стихов в этом году:</span>
+                      <span class="font-medium text-slate-900">{{
+                        currentYearPoemCount
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </aside>
 
@@ -258,50 +341,78 @@
               </div>
 
               <!-- Pagination Controls -->
-              <div
-                v-if="paginatedPoems?.length"
-                class="mt-12 flex justify-center items-center space-x-4"
-              >
-                <button
-                  @click="currentPage--"
-                  :disabled="currentPage === 1"
-                  class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
-                >
-                  <i class="fas fa-chevron-left mr-2"></i>
-                  Предыдущая
-                </button>
-
-                <div class="flex items-center space-x-2">
-                  <template v-for="pageNum in totalPages" :key="pageNum">
+              <div v-if="paginatedPoems?.length" class="mt-12">
+                <!-- Mobile Pagination -->
+                <div class="flex flex-col space-y-4 sm:hidden">
+                  <div class="flex justify-center text-sm text-slate-600">
+                    Страница {{ currentPage }} из {{ totalPages }}
+                  </div>
+                  <div class="flex justify-between">
                     <button
-                      v-if="shouldShowPage(pageNum)"
-                      @click="currentPage = pageNum"
-                      class="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
-                      :class="[
-                        currentPage === pageNum
-                          ? 'bg-amber-500 text-white'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-amber-50',
-                      ]"
+                      @click="currentPage--"
+                      :disabled="currentPage === 1"
+                      class="px-3 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors text-sm"
                     >
-                      {{ pageNum }}
+                      <i class="fas fa-chevron-left mr-1"></i>
+                      Пред.
                     </button>
-                    <span
-                      v-else-if="shouldShowEllipsis(pageNum)"
-                      class="px-2 text-slate-400"
+
+                    <button
+                      @click="currentPage++"
+                      :disabled="currentPage === totalPages"
+                      class="px-3 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors text-sm"
                     >
-                      ...
-                    </span>
-                  </template>
+                      След.
+                      <i class="fas fa-chevron-right ml-1"></i>
+                    </button>
+                  </div>
                 </div>
 
-                <button
-                  @click="currentPage++"
-                  :disabled="currentPage === totalPages"
-                  class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
+                <!-- Desktop Pagination -->
+                <div
+                  class="hidden sm:flex justify-center items-center space-x-4"
                 >
-                  Следующая
-                  <i class="fas fa-chevron-right ml-2"></i>
-                </button>
+                  <button
+                    @click="currentPage--"
+                    :disabled="currentPage === 1"
+                    class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
+                  >
+                    <i class="fas fa-chevron-left mr-2"></i>
+                    Предыдущая
+                  </button>
+
+                  <div class="flex items-center space-x-2">
+                    <template v-for="pageNum in totalPages" :key="pageNum">
+                      <button
+                        v-if="shouldShowPage(pageNum)"
+                        @click="currentPage = pageNum"
+                        class="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                        :class="[
+                          currentPage === pageNum
+                            ? 'bg-amber-500 text-white'
+                            : 'bg-white border border-slate-200 text-slate-600 hover:bg-amber-50',
+                        ]"
+                      >
+                        {{ pageNum }}
+                      </button>
+                      <span
+                        v-else-if="shouldShowEllipsis(pageNum)"
+                        class="px-2 text-slate-400"
+                      >
+                        ...
+                      </span>
+                    </template>
+                  </div>
+
+                  <button
+                    @click="currentPage++"
+                    :disabled="currentPage === totalPages"
+                    class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
+                  >
+                    Следующая
+                    <i class="fas fa-chevron-right ml-2"></i>
+                  </button>
+                </div>
               </div>
 
               <!-- Empty State -->
@@ -455,5 +566,54 @@ watch(totalPages, (newTotalPages) => {
   if (currentPage.value > newTotalPages) {
     currentPage.value = Math.max(1, newTotalPages);
   }
+});
+
+// Add these to your existing script setup
+const isYearDropdownOpen = ref(false);
+
+// Toggle dropdown
+const toggleDropdown = () => {
+  isYearDropdownOpen.value = !isYearDropdownOpen.value;
+};
+
+// Close dropdown when clicking outside
+onMounted(() => {
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".year-dropdown")) {
+      isYearDropdownOpen.value = false;
+    }
+  });
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", (e) => {
+    if (!e.target.closest(".year-dropdown")) {
+      isYearDropdownOpen.value = false;
+    }
+  });
+});
+
+// Helper function for year selection
+const selectYear = (year) => {
+  selectedYear.value = year;
+  isYearDropdownOpen.value = false;
+};
+
+// Computed properties for year stats
+const earliestYear = computed(() => {
+  const years =
+    posts.value?.map((post) => new Date(post.publishedAt).getFullYear()) || [];
+  return years.length ? Math.min(...years) : "-";
+});
+
+const latestYear = computed(() => {
+  const years =
+    posts.value?.map((post) => new Date(post.publishedAt).getFullYear()) || [];
+  return years.length ? Math.max(...years) : "-";
+});
+
+const currentYearPoemCount = computed(() => {
+  if (selectedYear.value === "all") return totalPoemCount.value;
+  return years.value.find((y) => y.value === selectedYear.value)?.count || 0;
 });
 </script>
