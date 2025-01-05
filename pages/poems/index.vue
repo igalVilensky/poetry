@@ -159,14 +159,29 @@
               </div>
             </aside>
 
-            <!-- Poems Grid -->
+            <!-- Poems Grid with Pagination -->
             <main class="flex-1 max-w-4xl">
+              <!-- Search Bar -->
+              <div class="mb-8">
+                <div class="relative">
+                  <input
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="Поиск стихотворений..."
+                    class="w-full px-6 py-4 rounded-xl border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+                  />
+                  <i
+                    class="fas fa-search absolute right-6 top-1/2 -translate-y-1/2 text-slate-400"
+                  ></i>
+                </div>
+              </div>
+
               <div
-                v-if="filteredPoems?.length"
+                v-if="paginatedPoems?.length"
                 class="grid grid-cols-1 md:grid-cols-2 gap-8"
               >
                 <article
-                  v-for="poem in filteredPoems"
+                  v-for="poem in paginatedPoems"
                   :key="poem._id"
                   class="group bg-white rounded-xl border border-slate-200 hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
                 >
@@ -182,7 +197,11 @@
                         {{
                           new Date(poem.publishedAt).toLocaleDateString(
                             "ru-RU",
-                            { day: "numeric", month: "short", year: "numeric" }
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            }
                           )
                         }}
                       </p>
@@ -238,6 +257,53 @@
                 </article>
               </div>
 
+              <!-- Pagination Controls -->
+              <div
+                v-if="paginatedPoems?.length"
+                class="mt-12 flex justify-center items-center space-x-4"
+              >
+                <button
+                  @click="currentPage--"
+                  :disabled="currentPage === 1"
+                  class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
+                >
+                  <i class="fas fa-chevron-left mr-2"></i>
+                  Предыдущая
+                </button>
+
+                <div class="flex items-center space-x-2">
+                  <template v-for="pageNum in totalPages" :key="pageNum">
+                    <button
+                      v-if="shouldShowPage(pageNum)"
+                      @click="currentPage = pageNum"
+                      class="w-10 h-10 rounded-lg flex items-center justify-center transition-colors"
+                      :class="[
+                        currentPage === pageNum
+                          ? 'bg-amber-500 text-white'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-amber-50',
+                      ]"
+                    >
+                      {{ pageNum }}
+                    </button>
+                    <span
+                      v-else-if="shouldShowEllipsis(pageNum)"
+                      class="px-2 text-slate-400"
+                    >
+                      ...
+                    </span>
+                  </template>
+                </div>
+
+                <button
+                  @click="currentPage++"
+                  :disabled="currentPage === totalPages"
+                  class="px-4 py-2 rounded-lg border border-slate-200 text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-50 transition-colors"
+                >
+                  Следующая
+                  <i class="fas fa-chevron-right ml-2"></i>
+                </button>
+              </div>
+
               <!-- Empty State -->
               <div
                 v-else
@@ -260,7 +326,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
 import { fetchPosts } from "~/api/sanity/posts";
 import { getImageUrl } from "~/api/sanity/client";
@@ -275,6 +341,8 @@ const urlFor = getImageUrl(projectId, dataset);
 // Search and filter parameters
 const searchQuery = ref("");
 const selectedYear = ref("all");
+const currentPage = ref(1);
+const itemsPerPage = 10;
 
 // Computed for years based on the publishedAt date of posts
 const years = computed(() => {
@@ -299,7 +367,12 @@ const filteredPoems = computed(() => {
   return posts.value?.filter((post) => {
     const matchesSearch = searchQuery.value
       ? post.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        post.content?.toLowerCase().includes(searchQuery.value.toLowerCase())
+        (post.body &&
+          post.body[0] &&
+          post.body[0].children[0].text &&
+          post.body[0].children[0].text
+            .toLowerCase()
+            .includes(searchQuery.value.toLowerCase()))
       : true;
 
     const matchesYear =
@@ -310,17 +383,77 @@ const filteredPoems = computed(() => {
   });
 });
 
+// Computed for pagination
+const totalPages = computed(() => {
+  return Math.ceil((filteredPoems.value?.length || 0) / itemsPerPage);
+});
+
+const paginatedPoems = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredPoems.value?.slice(startIndex, endIndex);
+});
+
+// Helper functions for pagination display
+const shouldShowPage = (pageNum) => {
+  // Always show first and last pages
+  if (pageNum === 1 || pageNum === totalPages.value) return true;
+  // Show pages around current page
+  if (Math.abs(currentPage.value - pageNum) <= 2) return true;
+  return false;
+};
+
+const shouldShowEllipsis = (pageNum) => {
+  // Show ellipsis between gaps of pages
+  if (pageNum === 1 || pageNum === totalPages.value) return false;
+  if (Math.abs(currentPage.value - pageNum) === 3) return true;
+  return false;
+};
+
+// Watch for changes in filters to reset pagination
+watch([searchQuery, selectedYear], () => {
+  currentPage.value = 1;
+});
+
 // New poems for the 'Новые стихи' section
 const newPoems = computed(() => {
   return posts.value
-    ?.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)) // Sort by publishedAt in descending order
-    .slice(0, 3); // Take the first 3 (which are now the most recent)
+    ?.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
+    .slice(0, 3);
 });
 
+// Category styling helper
 const getCategoryClass = (category) => {
   const classes = {
-    test: "bg-green-100 text-green-800", // Add more categories as needed
+    Лирика: "bg-pink-100 text-pink-800",
+    Философия: "bg-blue-100 text-blue-800",
+    Природа: "bg-green-100 text-green-800",
+    Любовь: "bg-red-100 text-red-800",
+    Жизнь: "bg-purple-100 text-purple-800",
   };
   return classes[category] || "bg-gray-100 text-gray-800";
 };
+
+// Handle potential errors in the API response
+watch(error, (newError) => {
+  if (newError) {
+    console.error("Error fetching posts:", newError);
+    // You can add error handling UI here if needed
+  }
+});
+
+// Reset to first page when posts data changes
+watch(
+  () => posts.value,
+  () => {
+    currentPage.value = 1;
+  }
+);
+
+// Ensure current page stays within bounds when total pages changes
+watch(totalPages, (newTotalPages) => {
+  if (currentPage.value > newTotalPages) {
+    currentPage.value = Math.max(1, newTotalPages);
+  }
+});
 </script>
