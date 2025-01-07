@@ -42,6 +42,7 @@
           :to="link.href"
           class="text-lg hover:text-amber-400 block md:inline transition-colors duration-300 relative group"
           exact-active-class="text-amber-400"
+          @click="closeMenu"
         >
           {{ link.text }}
           <span
@@ -230,7 +231,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { fetchPosts } from "~/api/sanity/posts";
 
@@ -247,9 +248,41 @@ const links = [
   { text: "Контакты", href: "/contact" },
 ];
 
+// Toggle menu
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
+
+// Close menu
+const closeMenu = () => {
+  menuOpen.value = false;
+};
+
+// Handle clicks outside the menu
+const handleClickOutside = (event) => {
+  const menu = document.querySelector("nav"); // Select the menu element
+  const hamburger = document.querySelector(
+    "button[aria-label='Toggle navigation menu']"
+  ); // Select the hamburger button
+
+  if (
+    menu &&
+    !menu.contains(event.target) &&
+    !hamburger.contains(event.target)
+  ) {
+    closeMenu();
+  }
+};
+
+// Add event listener for clicks outside the menu
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+// Remove event listener when the component is unmounted
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 const handleSearch = () => {
   clearTimeout(searchTimeout);
@@ -275,9 +308,7 @@ const clearSearch = () => {
 
 const handleResultClick = () => {
   clearSearch();
-  if (menuOpen.value) {
-    menuOpen.value = false;
-  }
+  closeMenu(); // Close the menu when a search result is clicked
 };
 
 // Clear search when route changes
