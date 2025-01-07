@@ -85,7 +85,22 @@
             leave-to-class="transform scale-95 opacity-0"
           >
             <div
-              v-if="searchResults.length > 0"
+              v-if="searchQuery && searchResults.length === 0"
+              class="mt-2 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-700/50 p-4 text-center"
+            >
+              <i class="fas fa-search text-amber-400 text-2xl mb-2"></i>
+              <p class="text-gray-400 max-w-full">
+                Ничего не найдено по запросу "<span
+                  class="font-medium text-amber-400 truncate inline-block max-w-[80%]"
+                  >{{ searchQuery }}</span
+                >"
+              </p>
+              <p class="text-sm text-gray-500 mt-1">
+                Попробуйте изменить запрос.
+              </p>
+            </div>
+            <div
+              v-else-if="searchResults.length > 0"
               class="mt-2 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-gray-700/50"
             >
               <div class="max-h-64 overflow-y-auto">
@@ -158,7 +173,22 @@
           leave-to-class="transform scale-95 opacity-0"
         >
           <div
-            v-if="searchResults.length > 0"
+            v-if="searchQuery && searchResults.length === 0"
+            class="absolute top-full left-0 w-full mt-2 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-gray-700/50 p-4 text-center"
+          >
+            <i class="fas fa-search text-amber-400 text-2xl mb-2"></i>
+            <p class="text-gray-400 max-w-full">
+              Ничего не найдено по запросу "<span
+                class="font-medium text-amber-400 truncate inline-block max-w-[80%]"
+                >{{ searchQuery }}</span
+              >"
+            </p>
+            <p class="text-sm text-gray-500 mt-1">
+              Попробуйте изменить запрос.
+            </p>
+          </div>
+          <div
+            v-else-if="searchResults.length > 0"
             class="absolute top-full left-0 w-full mt-2 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-gray-700/50"
           >
             <div class="max-h-64 overflow-y-auto">
