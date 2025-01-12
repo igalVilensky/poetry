@@ -1,4 +1,16 @@
 {
-  // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext", // Add this line
+    "moduleResolution": "node" // Add this line
+  },
+  "include": [
+    "./types/**/*.ts",
+    "./.nuxt/**/*.ts",
+    "./components/**/*.ts",
+    "./pages/**/*.ts",
+    "./plugins/**/*.ts",
+    "./app.vue",
+    "./error.vue"
+  ]
 }

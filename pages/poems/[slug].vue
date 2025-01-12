@@ -263,11 +263,18 @@ import type { SanityDocument } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import backgroundImage from "~/assets/images/background.jpg";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { useRoute } from "vue-router";
+import { useNuxtApp } from "#app";
+
+const { $axios } = useNuxtApp();
+const route = useRoute();
+const slug = route.params.slug; // Get the poem's slug from the route
 
 // Props & Data
 const POST_QUERY = groq`*[_type == "post" && slug.current == $slug][0]`;
-const { params } = useRoute();
-const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, params);
+const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
+  slug,
+});
 const { projectId, dataset } = useSanity().client.config();
 
 // State
@@ -390,39 +397,78 @@ const formatPoem = (text: string) => {
     .join("");
 };
 
-const submitComment = () => {
+// Fetch likes from the backend
+const fetchLikes = async () => {
+  try {
+    const response = await $axios.get(`/api/likes/${slug}`);
+    isLiked.value = response.data.isLiked;
+    likeCount.value = response.data.count;
+  } catch (error) {
+    console.error("Failed to fetch likes:", error);
+  }
+};
+
+// Toggle like
+const toggleLike = async () => {
+  try {
+    const response = await $axios.post(`/api/likes/${slug}/toggle`);
+    isLiked.value = response.data.isLiked;
+    likeCount.value = response.data.count;
+  } catch (error) {
+    console.error("Failed to toggle like:", error);
+  }
+};
+
+// Fetch comments from the backend
+const fetchComments = async () => {
+  try {
+    const response = await $axios.get(`/api/comments/${slug}`);
+    comments.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch comments:", error);
+  }
+};
+
+// Submit a new comment
+const submitComment = async () => {
   const trimmedComment = newComment.value.trim();
   if (!trimmedComment) return;
 
-  const comment: Comment = {
-    id: Date.now(),
-    author: currentUser.value?.name || "Гость",
-    avatar: currentUser.value?.avatar,
-    content: trimmedComment,
-    date: new Date().toISOString(),
-    likes: 0,
-    isLiked: false,
-  };
+  try {
+    const response = await $axios.post(`/api/comments/${slug}`, {
+      author: currentUser.value?.name || "Гость",
+      avatar: currentUser.value?.avatar,
+      content: trimmedComment,
+    });
 
-  comments.value.unshift(comment);
-  newComment.value = "";
+    // Add the new comment to the list
+    comments.value.unshift(response.data);
+    newComment.value = "";
+  } catch (error) {
+    console.error("Failed to submit comment:", error);
+  }
 };
 
-const toggleCommentLike = (commentId: number) => {
-  const comment = comments.value.find((c) => c.id === commentId);
-  if (comment) {
-    comment.isLiked = !comment.isLiked;
-    comment.likes += comment.isLiked ? 1 : -1;
+// Like a comment
+const toggleCommentLike = async (commentId: number) => {
+  try {
+    const response = await $axios.post(
+      `/api/comments/${slug}/${commentId}/like`
+    );
+    const updatedComment = response.data;
+
+    // Update the comment in the list
+    const index = comments.value.findIndex((c) => c.id === commentId);
+    if (index !== -1) {
+      comments.value[index] = updatedComment;
+    }
+  } catch (error) {
+    console.error("Failed to like comment:", error);
   }
 };
 
 const replyToComment = (commentId: number) => {
   console.log("Reply to comment:", commentId);
-};
-
-const toggleLike = () => {
-  isLiked.value = !isLiked.value;
-  likeCount.value += isLiked.value ? 1 : -1;
 };
 
 // Scroll handling
@@ -444,21 +490,9 @@ onMounted(() => {
     avatar: "/api/placeholder/40/40",
   };
 
-  // Simulate fetching initial comments
-  comments.value = [
-    {
-      id: 1,
-      author: "Анна Петрова",
-      avatar: "/api/placeholder/40/40",
-      content:
-        "Прекрасное стихотворение! Особенно понравились метафоры в третьей строфе.",
-      date: new Date(Date.now() - 86400000).toISOString(),
-      likes: 5,
-      isLiked: false,
-    },
-  ];
-
-  likeCount.value = 42;
+  // Fetch initial data
+  fetchLikes();
+  fetchComments();
 });
 
 onUnmounted(() => {

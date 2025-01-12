@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import { defineNuxtConfig } from "nuxt/config";
+
 export default defineNuxtConfig({
   css: [
     "@/assets/css/tailwind.css",
@@ -8,8 +9,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   postcss: {
     plugins: {
-      tailwindcss: {}, // Include Tailwind as a PostCSS plugin
-      autoprefixer: {}, // Include Autoprefixer for CSS
+      tailwindcss: {},
+      autoprefixer: {},
     },
   },
   modules: ["@nuxtjs/sanity"],
@@ -17,4 +18,5 @@ export default defineNuxtConfig({
     projectId: "1r9tekm9", // Replace with your Sanity project ID
     dataset: "production", // or your dataset name
   },
+  plugins: ["~/plugins/axios.js"],
 });
