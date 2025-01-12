@@ -19,4 +19,11 @@ export default defineNuxtConfig({
     dataset: "production", // or your dataset name
   },
   plugins: ["~/plugins/axios.js"],
+  // Add proxy configuration
+  proxy: {
+    "/api": {
+      target: "http://localhost:5000", // Your backend URL
+      pathRewrite: { "^/api": "" }, // Remove /api from the request path
+    },
+  },
 });

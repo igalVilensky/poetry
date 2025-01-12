@@ -265,6 +265,7 @@ import backgroundImage from "~/assets/images/background.jpg";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { useRoute } from "vue-router";
 import { useNuxtApp } from "#app";
+import { v4 as uuidv4 } from "uuid"; // For generating session IDs
 
 const { $axios } = useNuxtApp();
 const route = useRoute();
@@ -295,7 +296,7 @@ const sharePlatforms = [
 
 // New state for comments
 interface Comment {
-  id: number;
+  id: string; // Change to string to match MongoDB ObjectId
   author: string;
   avatar?: string;
   content: string;
@@ -314,6 +315,12 @@ const newComment = ref("");
 const isLiked = ref(false);
 const likeCount = ref(0);
 const currentUser = ref<User | null>(null);
+const sessionId = ref<string>(localStorage.getItem("sessionId") || uuidv4()); // Generate or retrieve sessionId
+
+// Save sessionId to localStorage
+if (!localStorage.getItem("sessionId")) {
+  localStorage.setItem("sessionId", sessionId.value);
+}
 
 // Methods
 const formatDate = (date: string) => {
@@ -400,7 +407,9 @@ const formatPoem = (text: string) => {
 // Fetch likes from the backend
 const fetchLikes = async () => {
   try {
-    const response = await $axios.get(`/api/likes/${slug}`);
+    const response = await $axios.get(`/api/likes/${slug}`, {
+      params: { sessionId: sessionId.value },
+    });
     isLiked.value = response.data.isLiked;
     likeCount.value = response.data.count;
   } catch (error) {
@@ -411,7 +420,9 @@ const fetchLikes = async () => {
 // Toggle like
 const toggleLike = async () => {
   try {
-    const response = await $axios.post(`/api/likes/${slug}/toggle`);
+    const response = await $axios.post(`/api/likes/${slug}/toggle`, {
+      sessionId: sessionId.value,
+    });
     isLiked.value = response.data.isLiked;
     likeCount.value = response.data.count;
   } catch (error) {
@@ -450,10 +461,11 @@ const submitComment = async () => {
 };
 
 // Like a comment
-const toggleCommentLike = async (commentId: number) => {
+const toggleCommentLike = async (commentId: string) => {
   try {
     const response = await $axios.post(
-      `/api/comments/${slug}/${commentId}/like`
+      `/api/comments/${slug}/${commentId}/like`,
+      { sessionId: sessionId.value }
     );
     const updatedComment = response.data;
 
@@ -467,7 +479,7 @@ const toggleCommentLike = async (commentId: number) => {
   }
 };
 
-const replyToComment = (commentId: number) => {
+const replyToComment = (commentId: string) => {
   console.log("Reply to comment:", commentId);
 };
 
