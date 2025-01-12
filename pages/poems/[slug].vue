@@ -433,26 +433,27 @@ const fetchLikes = async () => {
   }
 };
 
+// Fetch comments
+const fetchComments = async () => {
+  try {
+    const response = await $axios.get(`/api/comments/${slug}`); // Pass slug
+    comments.value = response.data;
+  } catch (error) {
+    console.error("Failed to fetch comments:", error);
+  }
+};
+
 // Toggle like
 const toggleLike = async () => {
   try {
     const response = await $axios.post(`/api/likes/${slug}/toggle`, {
+      // Pass slug
       sessionId: sessionId.value,
     });
     isLiked.value = response.data.isLiked;
     likeCount.value = response.data.count;
   } catch (error) {
     console.error("Failed to toggle like:", error);
-  }
-};
-
-// Fetch comments from the backend
-const fetchComments = async () => {
-  try {
-    const response = await $axios.get(`/api/comments/${slug}`);
-    comments.value = response.data;
-  } catch (error) {
-    console.error("Failed to fetch comments:", error);
   }
 };
 
