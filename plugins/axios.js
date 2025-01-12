@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default defineNuxtPlugin(() => {
   const axiosInstance = axios.create({
-    baseURL: "http://localhost:5000", // Set your backend URL here
+    baseURL: "https://poetry-backend-dbt3.onrender.com", // Set your backend URL here
   });
 
   return {
