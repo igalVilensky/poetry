@@ -315,12 +315,28 @@ const newComment = ref("");
 const isLiked = ref(false);
 const likeCount = ref(0);
 const currentUser = ref<User | null>(null);
-const sessionId = ref<string>(localStorage.getItem("sessionId") || uuidv4()); // Generate or retrieve sessionId
+const sessionId = ref<string>(""); // Initialize sessionId as an empty string
 
-// Save sessionId to localStorage
-if (!localStorage.getItem("sessionId")) {
-  localStorage.setItem("sessionId", sessionId.value);
-}
+// Generate or retrieve sessionId (client-side only)
+onMounted(() => {
+  if (process.client) {
+    sessionId.value = localStorage.getItem("sessionId") || uuidv4();
+    localStorage.setItem("sessionId", sessionId.value);
+  }
+
+  // Simulate fetching user data
+  currentUser.value = {
+    name: "Гость",
+    avatar: "/api/placeholder/40/40",
+  };
+
+  // Fetch initial data
+  fetchLikes();
+  fetchComments();
+
+  // Add scroll event listener
+  window.addEventListener("scroll", handleScroll);
+});
 
 // Methods
 const formatDate = (date: string) => {
@@ -493,20 +509,6 @@ const handleScroll = () => {
 };
 
 // Lifecycle
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-
-  // Simulate fetching user data
-  currentUser.value = {
-    name: "Гость",
-    avatar: "/api/placeholder/40/40",
-  };
-
-  // Fetch initial data
-  fetchLikes();
-  fetchComments();
-});
-
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
 });
