@@ -245,7 +245,7 @@ const links = [
   { text: "Главная", href: "/" },
   { text: "Стихи", href: "/poems" },
   { text: "Автор", href: "/author" },
-  { text: "Контакты", href: "/contact" },
+  { text: "Связь", href: "/contact" },
 ];
 
 // Toggle menu

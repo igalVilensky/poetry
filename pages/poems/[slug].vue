@@ -96,79 +96,162 @@
       ></div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Enhanced Main Content -->
     <main class="container mx-auto px-6 py-16">
       <div class="max-w-3xl mx-auto">
-        <div v-if="post?.image" class="mb-8">
-          <img
-            :src="urlFor(post?.image)?.width(300).height(150).url()"
-            :alt="post?.title || 'Poem Image'"
-            class="w-full rounded-lg shadow-lg"
-          />
-        </div>
-        <!-- Actions Bar -->
-        <div
-          class="flex items-center justify-between mb-12 border-b border-slate-200"
-        >
-          <!-- Reading Time -->
-          <div class="text-slate-500 text-sm">
-            <i class="far fa-clock mr-2"></i>
-            {{ post.readtime }} чтения
+        <!-- Poem Content Section -->
+        <article class="bg-white rounded-2xl shadow-sm p-8 mb-12">
+          <div class="prose prose-lg prose-slate mx-auto">
+            <div
+              v-if="post?.body"
+              v-for="(block, index) in post.body"
+              :key="index"
+              class="whitespace-pre-wrap font-serif"
+              v-html="formatPoem(block.children[0].text)"
+            ></div>
           </div>
+        </article>
 
-          <!-- Actions -->
-          <div class="flex items-center space-x-2">
-            <button
-              class="p-2.5 rounded-full hover:bg-amber-50 text-slate-600 hover:text-amber-600 transition-all relative"
-              :class="{ 'bg-amber-50': isBookmarked }"
-              @click="toggleBookmark"
-            >
-              <i
-                class="far fa-bookmark"
-                :class="{ 'fas fa-bookmark text-amber-600': isBookmarked }"
-              ></i>
-            </button>
-
-            <div class="relative">
+        <!-- Engagement Section -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 mb-12">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
               <button
-                class="p-2.5 rounded-full hover:bg-amber-50 text-slate-600 hover:text-amber-600 transition-all"
-                @click="toggleShare"
+                class="flex items-center space-x-2 px-4 py-2 rounded-full hover:bg-amber-50 transition-colors"
+                :class="{ 'text-amber-600': isLiked }"
+                @click="toggleLike"
               >
-                <i class="fas fa-share-alt"></i>
+                <i class="far fa-heart" :class="{ fas: isLiked }"></i>
+                <span>{{ likeCount }}</span>
+              </button>
+              <button
+                class="flex items-center space-x-2 px-4 py-2 rounded-full hover:bg-amber-50 transition-colors"
+              >
+                <i class="far fa-comment"></i>
+                <span>{{ comments.length }}</span>
+              </button>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button
+                class="p-2.5 rounded-full hover:bg-amber-50 transition-colors"
+                @click="toggleBookmark"
+                :class="{ 'text-amber-600': isBookmarked }"
+              >
+                <i class="far fa-bookmark" :class="{ fas: isBookmarked }"></i>
               </button>
 
-              <!-- Share Menu -->
-              <div
-                v-if="isShareOpen"
-                v-click-outside="closeShare"
-                class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10"
-                :initial="{ opacity: 0, scale: 0.95 }"
-                :enter="{ opacity: 1, scale: 1 }"
-              >
+              <!-- Share Button and Dropdown Container -->
+              <div class="relative">
                 <button
-                  v-for="platform in sharePlatforms"
-                  :key="platform.name"
-                  @click="shareOn(platform.name)"
-                  class="w-full px-4 py-2 text-left hover:bg-amber-50 text-slate-700 hover:text-amber-600 transition-colors flex items-center space-x-3"
+                  class="p-2.5 rounded-full hover:bg-amber-50 transition-colors"
+                  @click="toggleShare"
                 >
-                  <i :class="platform.icon"></i>
-                  <span>{{ platform.label }}</span>
+                  <i class="fas fa-share-alt"></i>
                 </button>
+
+                <!-- Share Menu -->
+                <div
+                  v-if="isShareOpen"
+                  v-click-outside="closeShare"
+                  class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10"
+                  :initial="{ opacity: 0, scale: 0.95 }"
+                  :enter="{ opacity: 1, scale: 1 }"
+                >
+                  <button
+                    v-for="platform in sharePlatforms"
+                    :key="platform.name"
+                    @click="shareOn(platform.name)"
+                    class="w-full px-4 py-2 text-left hover:bg-amber-50 text-slate-700 hover:text-amber-600 transition-colors flex items-center space-x-3"
+                  >
+                    <i :class="platform.icon"></i>
+                    <span>{{ platform.label }}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Poem Content -->
-        <article class="prose prose-lg prose-slate mx-auto">
-          <div
-            v-if="post?.body"
-            v-for="(block, index) in post.body"
-            :key="index"
-            class="whitespace-pre-wrap font-serif"
-            v-html="formatPoem(block.children[0].text)"
-          ></div>
-        </article>
+        <!-- Comments Section -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h3 class="text-xl font-semibold text-slate-900 mb-6">Комментарии</h3>
+
+          <!-- New Comment Form -->
+          <div class="mb-8">
+            <div class="flex items-start space-x-4">
+              <img
+                :src="currentUser?.avatar || '/api/placeholder/40/40'"
+                alt="User Avatar"
+                class="w-10 h-10 rounded-full"
+              />
+              <div class="flex-1">
+                <textarea
+                  v-model="newComment"
+                  placeholder="Поделитесь своими мыслями..."
+                  class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                  rows="3"
+                ></textarea>
+                <div class="mt-3 flex justify-end">
+                  <button
+                    @click="submitComment"
+                    class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+                    :disabled="!newComment.trim()"
+                  >
+                    Отправить
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comments List -->
+          <div class="space-y-6">
+            <div
+              v-for="comment in comments"
+              :key="comment.id"
+              class="flex space-x-4"
+            >
+              <img
+                :src="comment.avatar || '/api/placeholder/40/40'"
+                alt="Comment Avatar"
+                class="w-10 h-10 rounded-full"
+              />
+              <div class="flex-1">
+                <div class="bg-slate-50 rounded-lg p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-medium text-slate-900">
+                      {{ comment.author }}
+                    </h4>
+                    <span class="text-sm text-slate-500">{{
+                      formatCommentDate(comment.date)
+                    }}</span>
+                  </div>
+                  <p class="text-slate-700">{{ comment.content }}</p>
+                  <div class="mt-3 flex items-center space-x-4">
+                    <button
+                      @click="toggleCommentLike(comment.id)"
+                      class="text-sm text-slate-500 hover:text-amber-600 transition-colors"
+                      :class="{ 'text-amber-600': comment.isLiked }"
+                    >
+                      <i
+                        class="far fa-heart"
+                        :class="{ fas: comment.isLiked }"
+                      ></i>
+                      <span class="ml-1">{{ comment.likes }}</span>
+                    </button>
+                    <button
+                      @click="replyToComment(comment.id)"
+                      class="text-sm text-slate-500 hover:text-amber-600 transition-colors"
+                    >
+                      <i class="fas fa-reply"></i>
+                      <span class="ml-1">Ответить</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -203,12 +286,47 @@ const sharePlatforms = [
   { name: "copy", label: "Копировать ссылку", icon: "far fa-copy" },
 ];
 
+// New state for comments
+interface Comment {
+  id: number;
+  author: string;
+  avatar?: string;
+  content: string;
+  date: string;
+  likes: number;
+  isLiked: boolean;
+}
+
+interface User {
+  name: string;
+  avatar?: string;
+}
+
+const comments = ref<Comment[]>([]);
+const newComment = ref("");
+const isLiked = ref(false);
+const likeCount = ref(0);
+const currentUser = ref<User | null>(null);
+
 // Methods
 const formatDate = (date: string) => {
   return new Date(date).toLocaleDateString("ru-RU", {
     day: "numeric",
     month: "long",
     year: "numeric",
+  });
+};
+
+const formatCommentDate = (date: string) => {
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) return "Invalid Date";
+
+  return parsedDate.toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -257,7 +375,6 @@ const shareOn = (platform: string) => {
 
   if (platform === "copy") {
     navigator.clipboard.writeText(url);
-    // You might want to add a toast notification here
     return;
   }
 
@@ -273,6 +390,41 @@ const formatPoem = (text: string) => {
     .join("");
 };
 
+const submitComment = () => {
+  const trimmedComment = newComment.value.trim();
+  if (!trimmedComment) return;
+
+  const comment: Comment = {
+    id: Date.now(),
+    author: currentUser.value?.name || "Гость",
+    avatar: currentUser.value?.avatar,
+    content: trimmedComment,
+    date: new Date().toISOString(),
+    likes: 0,
+    isLiked: false,
+  };
+
+  comments.value.unshift(comment);
+  newComment.value = "";
+};
+
+const toggleCommentLike = (commentId: number) => {
+  const comment = comments.value.find((c) => c.id === commentId);
+  if (comment) {
+    comment.isLiked = !comment.isLiked;
+    comment.likes += comment.isLiked ? 1 : -1;
+  }
+};
+
+const replyToComment = (commentId: number) => {
+  console.log("Reply to comment:", commentId);
+};
+
+const toggleLike = () => {
+  isLiked.value = !isLiked.value;
+  likeCount.value += isLiked.value ? 1 : -1;
+};
+
 // Scroll handling
 const handleScroll = () => {
   const windowHeight = window.innerHeight;
@@ -285,6 +437,28 @@ const handleScroll = () => {
 // Lifecycle
 onMounted(() => {
   window.addEventListener("scroll", handleScroll);
+
+  // Simulate fetching user data
+  currentUser.value = {
+    name: "Гость",
+    avatar: "/api/placeholder/40/40",
+  };
+
+  // Simulate fetching initial comments
+  comments.value = [
+    {
+      id: 1,
+      author: "Анна Петрова",
+      avatar: "/api/placeholder/40/40",
+      content:
+        "Прекрасное стихотворение! Особенно понравились метафоры в третьей строфе.",
+      date: new Date(Date.now() - 86400000).toISOString(),
+      likes: 5,
+      isLiked: false,
+    },
+  ];
+
+  likeCount.value = 42;
 });
 
 onUnmounted(() => {
@@ -355,5 +529,11 @@ onUnmounted(() => {
 .prose ul ol,
 .prose ol ul {
   @apply mt-2 ml-6;
+}
+/* Add smooth transitions for interactive elements */
+
+/* Add hover effects for comment interactions */
+.hover-effect {
+  @apply hover:bg-amber-50 hover:text-amber-600 transition-colors duration-200;
 }
 </style>
