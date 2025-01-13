@@ -4,9 +4,11 @@
   >
     <!-- Hero Section -->
     <div class="relative h-[40vh] sm:h-[50vh] overflow-hidden">
+      <!-- Dynamic Background Image -->
       <div
+        v-if="heroImage"
         class="absolute inset-0 bg-cover bg-center"
-        style="background-image: url('https://via.placeholder.com/1920x1080')"
+        :style="{ backgroundImage: `url(${heroImage})` }"
       ></div>
       <div
         class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"
@@ -31,10 +33,18 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div
-            v-for="(track, index) in tracks"
-            :key="index"
+            v-for="track in tracks"
+            :key="track._id"
             class="bg-white rounded-xl border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
+            <!-- Track Cover Image -->
+            <div v-if="track.coverImage" class="h-48 overflow-hidden">
+              <img
+                :src="track.coverImage"
+                :alt="track.title"
+                class="w-full h-full object-cover"
+              />
+            </div>
             <div class="p-6">
               <h3 class="text-xl font-serif text-slate-900 mb-3">
                 {{ track.title }}
@@ -50,7 +60,7 @@
                   <i class="fas fa-play"></i>
                 </button>
                 <a
-                  :href="track.url"
+                  :href="`https://drive.google.com/uc?export=download&id=${track.trackId}`"
                   download
                   class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300 transition-colors"
                 >
@@ -77,7 +87,7 @@
             <p class="text-slate-600">{{ currentTrack.description }}</p>
           </div>
           <audio controls class="w-full max-w-md">
-            <source :src="currentTrack.url" type="audio/mpeg" />
+            <source :src="currentTrackUrl" type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
         </div>
@@ -87,33 +97,36 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { fetchTracks } from "~/api/sanity/tracks";
+import { useNuxtApp } from "#app"; // Import useNuxtApp
 
-// Sample Music Data
-const tracks = ref([
-  {
-    title: "Замри!",
-    description: "Энергичный трек с глубоким смыслом.",
-    url: "https://poetry-backend-mongo.onrender.com/stream-audio",
-  },
-  {
-    title: "Осенний вальс",
-    description: "Нежный и меланхоличный трек.",
-    url: "https://poetry-backend-mongo.onrender.com/stream-audio",
-  },
-  {
-    title: "Городские огни",
-    description: "Динамичный трек о жизни в большом городе.",
-    url: "https://poetry-backend-mongo.onrender.com/stream-audio",
-  },
-]);
-
-// Current Track
+// Fetch Tracks from Sanity
+const tracks = ref([]);
 const currentTrack = ref(null);
+const currentTrackUrl = ref(""); // Add this line
+const heroImage = ref(null); // For the hero section background image
 
-// Play Track Function
-const playTrack = (track) => {
-  currentTrack.value = track;
+const { $axios } = useNuxtApp();
+
+onMounted(async () => {
+  tracks.value = await fetchTracks();
+  // Set the hero image to the first track's cover image (if it exists)
+  if (tracks.value.length > 0 && tracks.value[0].coverImage) {
+    heroImage.value = tracks.value[0].coverImage;
+  }
+});
+
+const playTrack = async (track) => {
+  try {
+    // Set the current track
+    currentTrack.value = track;
+    // Construct the full URL using the Axios baseURL
+    const fullUrl = `${$axios.defaults.baseURL}/stream-audio?trackId=${track.fileId}`;
+    currentTrackUrl.value = fullUrl; // Set the currentTrackUrl to the full URL
+  } catch (error) {
+    console.error("Error fetching audio URL:", error);
+  }
 };
 </script>
 

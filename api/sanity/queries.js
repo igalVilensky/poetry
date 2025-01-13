@@ -13,3 +13,11 @@ export const POSTS_QUERY = `*[
     author,
     body
    }`;
+
+export const TRACKS_QUERY = `*[_type == "track"]{
+    _id,
+    title,
+    description,
+    "fileId": fileId, 
+    "coverImage": coverImage.asset->url
+  }`;
