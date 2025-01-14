@@ -79,17 +79,32 @@
       class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg"
     >
       <div class="container mx-auto px-6 py-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-lg font-serif text-slate-900">
+        <div class="flex items-center justify-between gap-4">
+          <!-- Track Info -->
+          <div class="flex-1 min-w-0">
+            <h3 class="text-lg font-serif text-slate-900 truncate">
               {{ currentTrack.title }}
             </h3>
-            <p class="text-slate-600">{{ currentTrack.description }}</p>
+            <p class="text-slate-600 truncate">
+              {{ currentTrack.description }}
+            </p>
           </div>
-          <audio controls class="w-full max-w-md">
-            <source :src="currentTrackUrl" type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
+
+          <!-- Audio Player -->
+          <div class="flex-1 max-w-md">
+            <audio controls class="w-full">
+              <source :src="currentTrackUrl" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </div>
+
+          <!-- Close Icon Button -->
+          <button
+            @click="closePlayer"
+            class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300 transition-colors"
+          >
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -104,8 +119,8 @@ import { useNuxtApp } from "#app"; // Import useNuxtApp
 // Fetch Tracks from Sanity
 const tracks = ref([]);
 const currentTrack = ref(null);
-const currentTrackUrl = ref(""); // Add this line
-const heroImage = ref(null); // For the hero section background image
+const currentTrackUrl = ref("");
+const heroImage = ref(null);
 
 const { $axios } = useNuxtApp();
 
@@ -127,6 +142,12 @@ const playTrack = async (track) => {
   } catch (error) {
     console.error("Error fetching audio URL:", error);
   }
+};
+
+// Function to close the player
+const closePlayer = () => {
+  currentTrack.value = null;
+  currentTrackUrl.value = "";
 };
 </script>
 
