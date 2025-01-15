@@ -292,9 +292,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
 import { fetchPosts } from "~/api/sanity/posts";
+import { usePoems } from "~/composables/usePoems";
+
+// Use the shared state
+const { setRecentPoems } = usePoems();
 
 // Fetch posts from Sanity
 const { data: posts } = fetchPosts();
@@ -316,7 +320,7 @@ const featuredPoems = computed(() => {
     .map((post) => ({
       id: post._id,
       title: post.title,
-      slug: post.slug,
+      slug: post.slug, // Access the `current` property of the slug
       category: post.category || "Нет категории", // Default category if none provided
       excerpt:
         post.body && post.body[0] && post.body[0].children[0].text
@@ -330,10 +334,22 @@ const featuredPoems = computed(() => {
     }));
 });
 
+// Set the shared state for recent poems
+onMounted(() => {
+  if (featuredPoems.value) {
+    setRecentPoems(featuredPoems.value);
+  }
+});
+
 // Categories - This is a placeholder since we typically need to fetch categories separately or derive from posts
 const categories = computed(() => {
+  if (!Array.isArray(posts.value)) {
+    console.warn("posts.value is not an array:", posts.value);
+    return [];
+  }
+
   const uniqueCategories = [
-    ...new Set(posts.value?.map((post) => post.category).filter((c) => c)),
+    ...new Set(posts.value.map((post) => post.category).filter((c) => c)),
   ];
   return uniqueCategories.map((category, index) => ({
     id: index + 1,

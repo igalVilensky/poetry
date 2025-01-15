@@ -31,7 +31,7 @@
                 class="bg-gray-800/50 text-sm rounded-l-lg px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-amber-500/50"
               />
               <button
-                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 rounded-r-lg transition-colors duration-300"
+                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 rounded-r-lg transition-colors duration-300 cursor-pointer"
               >
                 <i class="fas fa-paper-plane"></i>
               </button>
@@ -45,16 +45,16 @@
             Навигация
           </h3>
           <ul class="space-y-2">
-            <li v-for="link in quickLinks" :key="link.url">
-              <a
-                :href="link.url"
-                class="text-gray-300 hover:text-amber-400 transition-colors duration-300 flex items-center group"
+            <li v-for="link in quickLinks" :key="link.href">
+              <NuxtLink
+                :to="link.href"
+                class="text-gray-300 hover:text-amber-400 transition-colors duration-300 flex items-center group cursor-pointer"
               >
                 <span
                   class="w-1.5 h-1.5 bg-amber-500/50 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform duration-300"
                 ></span>
                 {{ link.text }}
-              </a>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -65,15 +65,20 @@
             Новые стихи
           </h3>
           <ul class="space-y-3">
-            <li v-for="poem in recentPoems" :key="poem.title">
-              <a href="#" class="group">
+            <li v-for="poem in recentPoems" :key="poem.id">
+              <NuxtLink
+                :to="`/poems/${poem.slug.current}`"
+                class="group cursor-pointer"
+              >
                 <p
                   class="text-gray-300 group-hover:text-amber-400 transition-colors duration-300"
                 >
                   {{ poem.title }}
                 </p>
-                <p class="text-sm text-gray-400">{{ poem.date }}</p>
-              </a>
+                <p class="text-sm text-gray-400">
+                  {{ poem.date }}
+                </p>
+              </NuxtLink>
             </li>
           </ul>
         </div>
@@ -88,7 +93,7 @@
               <i class="fas fa-envelope w-5 text-amber-500/50"></i>
               <a
                 href="mailto:contact@example.com"
-                class="ml-2 hover:text-amber-400 transition-colors duration-300"
+                class="ml-2 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
               >
                 contact@example.com
               </a>
@@ -97,7 +102,7 @@
               <i class="fas fa-phone w-5 text-amber-500/50"></i>
               <a
                 href="tel:+1234567890"
-                class="ml-2 hover:text-amber-400 transition-colors duration-300"
+                class="ml-2 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
               >
                 +1 (234) 567-890
               </a>
@@ -115,7 +120,7 @@
                 :key="social.platform"
                 :href="social.url"
                 :aria-label="social.platform"
-                class="w-10 h-10 rounded-full bg-gray-800/50 flex items-center justify-center hover:bg-amber-500/20 text-gray-300 hover:text-amber-400 transition-all duration-300"
+                class="w-10 h-10 rounded-full bg-gray-800/50 flex items-center justify-center hover:bg-amber-500/20 text-gray-300 hover:text-amber-400 transition-all duration-300 cursor-pointer"
               >
                 <i :class="social.icon"></i>
               </a>
@@ -135,18 +140,18 @@
           </p>
           <!-- Bottom Links -->
           <div class="flex space-x-6 text-sm">
-            <a
-              href="/privacy"
-              class="text-gray-400 hover:text-amber-400 transition-colors duration-300"
+            <NuxtLink
+              to="/privacy"
+              class="text-gray-400 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
             >
               Конфиденциальность
-            </a>
-            <a
-              href="/terms"
-              class="text-gray-400 hover:text-amber-400 transition-colors duration-300"
+            </NuxtLink>
+            <NuxtLink
+              to="/terms"
+              class="text-gray-400 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
             >
               Условия использования
-            </a>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -155,18 +160,16 @@
 </template>
 
 <script setup>
-const quickLinks = [
-  { text: "Главная", url: "/" },
-  { text: "Стихи", url: "/poems" },
-  { text: "Автор", url: "/author" },
-  { text: "О нас", url: "/about" },
-  { text: "Контакты", url: "/contact" },
-];
+import { usePoems } from "~/composables/usePoems";
 
-const recentPoems = [
-  { title: "Лад", date: "12 января 2024" },
-  { title: "Путь", date: "10 января 2024" },
-  { title: "Всё вернётся", date: "8 января 2024" },
+// Use the shared state
+const { recentPoems } = usePoems();
+
+const quickLinks = [
+  { text: "Главная", href: "/" },
+  { text: "Стихи", href: "/poems" },
+  { text: "Музыка", href: "/music" },
+  { text: "Автор", href: "/author" },
 ];
 
 const socialLinks = [
