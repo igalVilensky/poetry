@@ -244,8 +244,9 @@ let searchTimeout = null;
 const links = [
   { text: "Главная", href: "/" },
   { text: "Стихи", href: "/poems" },
+  { text: "Музыка", href: "/music" },
   { text: "Автор", href: "/author" },
-  { text: "Связь", href: "/contact" },
+  // { text: "Связь", href: "/contact" },
 ];
 
 // Toggle menu
