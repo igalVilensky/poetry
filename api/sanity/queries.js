@@ -2,7 +2,7 @@
 export const POSTS_QUERY = `*[
     _type == "post"
     && defined(slug.current)
-   ]|order(publishedAt desc)[0...500]{
+   ]|order(publishedAt desc)[0...1000]{
     _id,
     title,
     slug,
