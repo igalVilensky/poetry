@@ -269,7 +269,7 @@ import { ref, computed, onMounted } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
 import { fetchPosts } from "~/api/sanity/posts";
 import { usePoems } from "~/composables/usePoems";
-import Test from "~/components/test.vue";
+import Test from "~/components/Test.vue";
 
 // Use the shared state
 const { setRecentPoems } = usePoems();
