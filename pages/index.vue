@@ -132,37 +132,10 @@
       </div>
     </section>
 
-    <!-- Latest Blog Posts -->
+    <!-- Poem Count Section -->
     <section class="py-16 bg-white">
       <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-serif text-center text-gray-900 mb-12">
-          Блог о поэзии
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <article v-for="post in blogPosts" :key="post.id" class="group">
-            <a href="#" class="block">
-              <div
-                class="aspect-w-16 aspect-h-9 mb-4 rounded-lg overflow-hidden bg-gray-200"
-              >
-                <img
-                  src="https://media.newyorker.com/photos/5b968681dbd07a5060baef83/master/w_2560%2Cc_limit/NBA-Poetry-2018.jpg"
-                  :alt="post.title"
-                  class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <h3
-                class="text-xl font-serif text-gray-900 mb-2 group-hover:text-amber-600 transition-colors"
-              >
-                {{ post.title }}
-              </h3>
-              <p class="text-gray-600 mb-3">{{ post.excerpt }}</p>
-              <div class="flex items-center text-sm text-gray-500">
-                <i class="far fa-calendar-alt mr-2"></i>
-                {{ post.date }}
-              </div>
-            </a>
-          </article>
-        </div>
+        <Test :poems="posts" />
       </div>
     </section>
     <!-- Testimonials -->
@@ -296,6 +269,7 @@ import { ref, computed, onMounted } from "vue";
 import backgroundImage from "../assets/images/background.jpg";
 import { fetchPosts } from "~/api/sanity/posts";
 import { usePoems } from "~/composables/usePoems";
+import Test from "~/components/test.vue";
 
 // Use the shared state
 const { setRecentPoems } = usePoems();
