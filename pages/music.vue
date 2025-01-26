@@ -6,9 +6,9 @@
     <div class="relative h-[40vh] sm:h-[50vh] overflow-hidden">
       <!-- Dynamic Background Image -->
       <div
-        v-if="heroImage"
+        v-if="authorBackground"
         class="absolute inset-0 bg-cover bg-center"
-        :style="{ backgroundImage: `url(${heroImage})` }"
+        :style="{ backgroundImage: `url(${authorBackground})` }"
       ></div>
       <div
         class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"
@@ -254,6 +254,7 @@
 import { ref, onMounted, nextTick, onBeforeUnmount } from "vue";
 import { fetchTracks } from "~/api/sanity/tracks";
 import { useNuxtApp } from "#app";
+import authorBackground from "../assets/images/background.jpg";
 
 // State Management
 const tracks = ref([]);

@@ -92,13 +92,13 @@
             <p class="flex items-center">
               <i class="fas fa-envelope w-5 text-amber-500/50"></i>
               <a
-                href="mailto:contact@example.com"
+                href="mailto:belaveda.keren@gmail.com"
                 class="ml-2 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
               >
-                contact@example.com
+                belaveda.keren@gmail.com
               </a>
             </p>
-            <p class="flex items-center">
+            <!-- <p class="flex items-center">
               <i class="fas fa-phone w-5 text-amber-500/50"></i>
               <a
                 href="tel:+1234567890"
@@ -106,7 +106,7 @@
               >
                 +1 (234) 567-890
               </a>
-            </p>
+            </p> -->
           </div>
 
           <!-- Social Media Links -->
