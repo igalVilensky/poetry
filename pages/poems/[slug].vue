@@ -1,5 +1,15 @@
 <template>
-  <div class="min-h-screen">
+  <div :class="theme === 'dark' ? 'bg-[#121212]' : ''" class="min-h-screen">
+    <button
+      @click="toggleTheme"
+      class="flex-shrink-0 z-50 flex items-center justify-center absolute top-4 right-16 sm:top-5 sm:right-4 w-8 aspect-square bg-amber-500 text-white rounded-full focus:outline-none transition-all"
+    >
+      <i
+        :class="theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon'"
+        class="text-sm"
+      ></i>
+    </button>
+
     <!-- Hero Section with Dynamic Parallax -->
     <header
       class="relative h-[50vh] sm:h-[40vh] overflow-hidden"
@@ -18,20 +28,6 @@
       <div
         class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-amber-900/90"
       ></div>
-
-      <!-- Decorative Elements -->
-      <div class="absolute inset-0">
-        <div class="absolute inset-0 mix-blend-overlay opacity-40">
-          <div
-            class="h-full w-full bg-[radial-gradient(circle_600px_at_50%_50%,rgba(251,191,36,0.1),transparent)]"
-          ></div>
-        </div>
-        <div class="absolute inset-0 mix-blend-multiply">
-          <div
-            class="h-full w-full bg-gradient-to-b from-transparent to-slate-900/20"
-          ></div>
-        </div>
-      </div>
 
       <!-- Content -->
       <div
@@ -113,38 +109,64 @@
         </article>
 
         <!-- Engagement Section -->
-        <div class="bg-white rounded-2xl shadow-sm p-6 mb-12">
+        <div
+          :class="theme === 'dark' ? 'bg-slate-800' : 'bg-white'"
+          class="rounded-2xl shadow-sm p-6 mb-12"
+        >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
+              <!-- Like Button -->
               <button
-                class="flex items-center space-x-2 px-4 py-2 rounded-full hover:bg-amber-50 transition-colors"
-                :class="{ 'text-amber-600': isLiked }"
+                class="flex items-center space-x-2 px-4 py-2 rounded-full transition-colors focus:ring-2 focus:ring-amber-500"
+                :class="
+                  theme === 'dark'
+                    ? 'text-white hover:bg-amber-300 hover:text-black'
+                    : 'text-slate-800 hover:bg-amber-200 hover:text-amber-600'
+                "
                 @click="toggleLike"
               >
                 <i class="far fa-heart" :class="{ fas: isLiked }"></i>
                 <span>{{ likeCount }}</span>
               </button>
+
+              <!-- Comment Button -->
               <button
-                class="flex items-center space-x-2 px-4 py-2 rounded-full hover:bg-amber-50 transition-colors"
+                class="flex items-center space-x-2 px-4 py-2 rounded-full transition-colors focus:ring-2 focus:ring-amber-500"
+                :class="
+                  theme === 'dark'
+                    ? 'text-white hover:bg-amber-300 hover:text-black'
+                    : 'text-slate-800 hover:bg-amber-200 hover:text-amber-600'
+                "
               >
                 <i class="far fa-comment"></i>
                 <span>{{ comments.length }}</span>
               </button>
             </div>
+
             <div class="flex items-center space-x-2">
+              <!-- Bookmark Button -->
               <button
-                class="p-2.5 rounded-full hover:bg-amber-50 transition-colors"
+                class="p-2.5 rounded-full transition-colors focus:ring-2 focus:ring-amber-500"
                 @click="toggleBookmark"
-                :class="{ 'text-amber-600': isBookmarked }"
+                :class="
+                  theme === 'dark'
+                    ? 'text-white hover:bg-amber-300 hover:text-black'
+                    : 'text-slate-800 hover:bg-amber-200 hover:text-amber-600'
+                "
               >
                 <i class="far fa-bookmark" :class="{ fas: isBookmarked }"></i>
               </button>
 
-              <!-- Share Button and Dropdown Container -->
+              <!-- Share Button -->
               <div class="relative">
                 <button
-                  class="p-2.5 rounded-full hover:bg-amber-50 transition-colors"
+                  class="p-2.5 rounded-full transition-colors focus:ring-2 focus:ring-amber-500"
                   @click="toggleShare"
+                  :class="
+                    theme === 'dark'
+                      ? 'text-white hover:bg-amber-300 hover:text-black'
+                      : 'text-slate-800 hover:bg-amber-200 hover:text-amber-600'
+                  "
                 >
                   <i class="fas fa-share-alt"></i>
                 </button>
@@ -153,15 +175,19 @@
                 <div
                   v-if="isShareOpen"
                   v-click-outside="closeShare"
-                  class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10"
-                  :initial="{ opacity: 0, scale: 0.95 }"
-                  :enter="{ opacity: 1, scale: 1 }"
+                  class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-10"
+                  :class="theme === 'dark' ? 'bg-slate-700' : 'bg-white'"
                 >
                   <button
                     v-for="platform in sharePlatforms"
                     :key="platform.name"
                     @click="shareOn(platform.name)"
-                    class="w-full px-4 py-2 text-left hover:bg-amber-50 text-slate-700 hover:text-amber-600 transition-colors flex items-center space-x-3"
+                    class="w-full px-4 py-2 text-left flex items-center space-x-3 transition-colors"
+                    :class="
+                      theme === 'dark'
+                        ? 'text-white hover:bg-amber-300 hover:text-black'
+                        : 'text-slate-700 hover:bg-amber-200 hover:text-amber-600'
+                    "
                   >
                     <i :class="platform.icon"></i>
                     <span>{{ platform.label }}</span>
@@ -174,13 +200,18 @@
 
         <!-- Comments Section -->
         <div class="bg-white rounded-2xl shadow-sm p-6">
-          <h3 class="text-xl font-semibold text-slate-900 mb-6">Комментарии</h3>
+          <h3
+            :class="theme === 'dark' ? 'text-white' : 'text-slate-900'"
+            class="text-xl font-semibold mb-6"
+          >
+            Комментарии
+          </h3>
 
           <!-- New Comment Form -->
           <div class="mb-8">
             <div class="flex items-start space-x-4">
               <img
-                :src="currentUser?.avatar || '/api/placeholder/40/40'"
+                src="https://banner2.cleanpng.com/20190702/tl/kisspng-computer-icons-portable-network-graphics-avatar-tr-clip-directory-professional-transparent-amp-png-1713882914216.webp"
                 alt="User Avatar"
                 class="w-10 h-10 rounded-full"
               />
@@ -194,7 +225,7 @@
                 <div class="mt-3 flex justify-end">
                   <button
                     @click="submitComment"
-                    class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors"
+                    class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
                     :disabled="!newComment.trim()"
                   >
                     Отправить
@@ -212,7 +243,7 @@
               class="flex space-x-4"
             >
               <img
-                :src="comment.avatar || '/api/placeholder/40/40'"
+                src="https://banner2.cleanpng.com/20190702/tl/kisspng-computer-icons-portable-network-graphics-avatar-tr-clip-directory-professional-transparent-amp-png-1713882914216.webp"
                 alt="Comment Avatar"
                 class="w-10 h-10 rounded-full"
               />
@@ -230,7 +261,7 @@
                   <div class="mt-3 flex items-center space-x-4">
                     <button
                       @click="toggleCommentLike(comment.id)"
-                      class="text-sm text-slate-500 hover:text-amber-600 transition-colors"
+                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
                       :class="{ 'text-amber-600': comment.isLiked }"
                     >
                       <i
@@ -241,7 +272,7 @@
                     </button>
                     <button
                       @click="replyToComment(comment.id)"
-                      class="text-sm text-slate-500 hover:text-amber-600 transition-colors"
+                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
                     >
                       <i class="fas fa-reply"></i>
                       <span class="ml-1">Ответить</span>
@@ -316,6 +347,18 @@ const isLiked = ref(false);
 const likeCount = ref(0);
 const currentUser = ref<User | null>(null);
 const sessionId = ref<string>(""); // Initialize sessionId as an empty string
+const theme = ref("light");
+
+const toggleTheme = () => {
+  theme.value = theme.value === "light" ? "dark" : "light";
+  if (theme.value === "dark") {
+    document.body.classList.add("dark");
+    document.body.classList.remove("light");
+  } else {
+    document.body.classList.add("light");
+    document.body.classList.remove("dark");
+  }
+};
 
 // Generate or retrieve sessionId (client-side only)
 onMounted(() => {
@@ -512,10 +555,47 @@ const handleScroll = () => {
 // Lifecycle
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
+  document.body.classList.remove("dark");
+  document.body.classList.add("light");
 });
 </script>
 
-<style>
+<style scoped>
+/* Light Theme (default) */
+body.light {
+  background-color: white;
+  color: black;
+}
+
+body.light .bg-white {
+  background-color: white;
+  color: black;
+}
+
+/* Dark Theme */
+body.dark {
+  background-color: #121212;
+  color: white;
+}
+
+body.dark .bg-white {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+body.dark .text-slate-700 {
+  color: #ccc;
+}
+
+body.dark .prose {
+  color: white;
+  background-color: #1e1e1e;
+}
+
+body.dark .bg-amber-500 {
+  background-color: #ffd700; /* Adjust amber color for dark theme */
+}
+
 .prose {
   @apply text-slate-700 text-lg;
 }
@@ -579,7 +659,6 @@ onUnmounted(() => {
 .prose ol ul {
   @apply mt-2 ml-6;
 }
-/* Add smooth transitions for interactive elements */
 
 /* Add hover effects for comment interactions */
 .hover-effect {

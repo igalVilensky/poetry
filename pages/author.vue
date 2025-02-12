@@ -51,7 +51,7 @@
           <h2
             class="text-3xl md:text-4xl font-serif text-slate-900 mb-8 text-center"
           >
-            Жизнь в искусстве
+            Об авторе
           </h2>
           <div class="prose prose-lg md:prose-xl max-w-none">
             <p class="text-slate-700 leading-relaxed">
