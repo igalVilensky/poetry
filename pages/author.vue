@@ -22,7 +22,7 @@
             <img
               :src="authorImage"
               alt="Керен Виленская"
-              class="w-full h-full object-cover object-[center_35%] author-image"
+              class="w-full h-full object-cover object-[center_20%] author-image"
             />
           </div>
 
