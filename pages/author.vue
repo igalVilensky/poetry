@@ -17,14 +17,15 @@
           class="h-full flex flex-col md:flex-row items-center justify-center md:justify-start gap-8 md:gap-16"
         >
           <div
-            class="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-amber-300 shadow-xl"
+            class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-amber-300 shadow-xl"
           >
             <img
               :src="authorImage"
               alt="Керен Виленская"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover object-[center_35%] author-image"
             />
           </div>
+
           <div class="text-center md:text-left">
             <p class="text-amber-200 text-xl md:text-2xl font-light mb-6">
               Музыкант • Режиссер • Поэтесса
@@ -86,7 +87,7 @@
         <h2
           class="text-3xl md:text-4xl font-serif text-slate-900 mb-12 text-center"
         >
-          Последние произведения
+          Избранные произведения
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <article
@@ -95,27 +96,28 @@
             class="bg-white rounded-xl border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
           >
             <div class="p-6">
-              <div class="mb-4">
-                <span
-                  :class="getCategoryClass(work.category)"
-                  class="px-4 py-1.5 text-sm font-medium rounded-full"
-                >
-                  {{ work.category }}
-                </span>
-              </div>
-              <h3 class="text-xl font-serif text-slate-900 mb-3">
+              <h3
+                class="text-2xl font-serif text-slate-800 mb-3 leading-tight font-medium"
+              >
                 {{ work.title }}
               </h3>
-              <p class="text-slate-600 mb-4 line-clamp-3">{{ work.excerpt }}</p>
+              <p
+                class="text-slate-600 mb-4 line-clamp-3 text-sm leading-relaxed"
+              >
+                {{ work.excerpt }}
+              </p>
               <div
                 class="flex justify-between items-center pt-4 border-t border-slate-100"
               >
-                <span class="text-sm text-slate-500">{{ work.date }}</span>
+                <span class="text-sm text-slate-500">
+                  <i class="fas fa-calendar-alt mr-2"></i>
+                  {{ work.date }}
+                </span>
                 <nuxt-link
-                  :to="`/poems/${work.id}`"
+                  :to="work.link"
                   class="text-amber-600 hover:text-amber-700 font-medium"
                 >
-                  Читать →
+                  Читать <i class="fas fa-arrow-right ml-1"></i>
                 </nuxt-link>
               </div>
             </div>
@@ -150,7 +152,7 @@
 
 <script setup>
 import authorBackground from "../assets/images/background.jpg";
-import authorImage from "../assets/images/avatar.jpg";
+import authorImage from "../assets/images/avatar2.jpeg";
 
 // Author Bio
 const authorBio =
@@ -176,24 +178,27 @@ const authorStats = [
 const latestWorks = [
   {
     id: 1,
-    title: "Весенний рассвет",
-    category: "Пейзажная лирика",
-    excerpt: "Рассвет встаёт над лугами, пробуждая от сна всю природу...",
-    date: "10 марта 2024",
+    title: "Белый плат",
+    excerpt:
+      "В конце концов — к началу всех начал, к причалу, где младенец закричал впервые...",
+    date: "28 сентября 2016",
+    link: "/poems/beli%20plat",
   },
   {
     id: 2,
-    title: "Философия тишины",
-    category: "Философская лирика",
-    excerpt: "В безмолвии ночи рождаются самые глубокие мысли...",
-    date: "5 марта 2024",
+    title: "Сотис",
+    excerpt:
+      "О тайном, которое явным не станет, о парусе белом над морем летящем...",
+    date: "28 сентября 2016",
+    link: "/poems/sotis",
   },
   {
     id: 3,
-    title: "Городской романс",
-    category: "Романтическая поэзия",
-    excerpt: "Улицы города хранят истории тысячи встреч...",
-    date: "1 марта 2024",
+    title: "Раз, два, три…",
+    excerpt:
+      "Создатель всех времен, мой голос слаб, и все, что вижу я — несовершенно...",
+    date: "30 сентября 2016",
+    link: "/poems/razdvatri",
   },
 ];
 
@@ -207,3 +212,9 @@ const getCategoryClass = (category) => {
   return classes[category] || "bg-gray-100 text-gray-800";
 };
 </script>
+<style scoped>
+.author-image {
+  filter: brightness(110%) contrast(110%) saturate(100%) hue-rotate(5deg)
+    drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+}
+</style>
