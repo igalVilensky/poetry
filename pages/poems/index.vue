@@ -30,13 +30,15 @@
             <h1
               class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center"
             >
-              Поэзия <span class="text-amber-300">внутреннего мира</span>
+              Это <span class="text-amber-300">твое время</span>
             </h1>
             <p
               class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light"
             >
-              Исследуйте мир поэзии через времена, где каждое стихотворение —
-              это окно в новую реальность.
+              Над морской синевой - небес шелка.<br />
+              Солнце жаркие письма землянам шлет.<br />
+              От Истока безмолвной любви река<br />
+              день и ночь напролет все течет и течет ...
             </p>
           </div>
         </div>
