@@ -1,26 +1,43 @@
 <template>
   <div
     class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300">
-    <!-- Author Hero Section -->
+    <!-- Author Hero Section with Floating Words -->
     <div class="relative h-[60vh] sm:h-[50vh] overflow-hidden">
       <div class="absolute inset-0 bg-cover bg-center" :style="{ backgroundImage: `url(${authorBackground})` }"></div>
       <div class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"></div>
 
+      <!-- Floating Poetry Words -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div v-for="(word, index) in floatingWords" :key="index"
+          class="absolute text-white/5 dark:text-white/3 font-serif text-4xl md:text-6xl floating-word" :style="{
+            left: word.x + '%',
+            top: word.y + '%',
+            animationDelay: word.delay + 's',
+            animationDuration: word.duration + 's'
+          }">
+          {{ word.text }}
+        </div>
+      </div>
+
       <div class="relative h-full container mx-auto px-6">
         <div class="h-full flex flex-col md:flex-row items-center justify-center md:justify-start gap-8 md:gap-16">
+          <!-- Author Image with Breathing Glow -->
           <div
-            class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-amber-300 shadow-xl">
+            class="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-amber-300 shadow-xl breathing-glow">
             <img :src="authorImage" alt="Керен Виленская"
               class="w-full h-full object-cover object-[center_20%] author-image" />
           </div>
 
           <div class="text-center md:text-left">
-            <p class="text-amber-200 text-xl md:text-2xl font-light mb-6">
-              Музыкант • Режиссер • Поэтесса
+            <!-- Typewriter Effect for Quote -->
+            <p class="text-amber-200 text-xl md:text-2xl font-light mb-6 min-h-[2em]">
+              <span>{{ displayedText }}</span>
+              <span v-if="!isTypingComplete" class="typing-cursor">|</span>
             </p>
             <div class="flex gap-4 justify-center md:justify-start">
-              <a href="#" class="text-white hover:text-amber-300 transition-colors" v-for="social in socialLinks"
-                :key="social.name">
+              <a href="#"
+                class="text-white hover:text-amber-300 transition-colors transform hover:scale-110 duration-300"
+                v-for="social in socialLinks" :key="social.name">
                 <i :class="social.icon" class="text-2xl"></i>
               </a>
             </div>
@@ -37,7 +54,7 @@
             Об авторе
           </h2>
           <div class="prose prose-lg md:prose-xl max-w-none">
-            <p class="text-slate-700 dark:text-gray-300 leading-relaxed">
+            <p class="text-slate-700 dark:text-gray-300 leading-relaxed text-justify">
               {{ authorBio }}
             </p>
           </div>
@@ -45,30 +62,36 @@
       </div>
     </section>
 
-    <!-- Author Stats -->
+    <!-- Author Stats with Ink Spread Effect -->
     <section class="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="stat in authorStats" :key="stat.label"
-            class="text-center p-6 rounded-xl bg-gradient-to-br from-amber-50 to-white dark:from-gray-800 dark:to-gray-700 border border-amber-100 dark:border-gray-600 transition-colors duration-300">
-            <div class="text-3xl md:text-4xl font-serif text-amber-700 dark:text-amber-400 mb-2">
-              {{ stat.value }}
+            class="stat-card text-center p-6 rounded-xl bg-gradient-to-br from-amber-50 to-white dark:from-gray-800 dark:to-gray-700 border border-amber-100 dark:border-gray-600 transition-colors duration-300 relative overflow-hidden group cursor-pointer">
+            <!-- Ink Spread Effect -->
+            <div class="ink-spread"></div>
+
+            <div class="relative z-10">
+              <div class="text-3xl md:text-4xl font-serif text-amber-700 dark:text-amber-400 mb-2">
+                {{ stat.value }}
+              </div>
+              <div class="text-slate-600 dark:text-gray-300">{{ stat.label }}</div>
             </div>
-            <div class="text-slate-600 dark:text-gray-300">{{ stat.label }}</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Latest Works -->
+    <!-- Latest Works with Staggered Fade-In -->
     <section class="py-16 md:py-24">
       <div class="container mx-auto px-6">
         <h2 class="text-3xl md:text-4xl font-serif text-slate-900 dark:text-white mb-12 text-center">
           Избранные произведения
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <article v-for="work in latestWorks" :key="work.id"
-            class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+          <article v-for="(work, index) in latestWorks" :key="work.id" ref="workCards"
+            class="work-card bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            :style="{ animationDelay: (index * 150) + 'ms' }">
             <div class="p-6">
               <h3 class="text-2xl font-serif text-slate-800 dark:text-white mb-3 leading-tight font-medium">
                 {{ work.title }}
@@ -105,7 +128,7 @@
             со мной:
           </p>
           <a href="mailto:belaveda.keren@gmail.com"
-            class="inline-flex items-center px-8 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-white font-medium hover:from-amber-500 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl">
+            class="inline-flex items-center px-8 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-white font-medium hover:from-amber-500 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
             <i class="far fa-envelope mr-2"></i>
             Написать письмо
           </a>
@@ -116,6 +139,7 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import authorBackground from "../assets/images/background.jpg";
 import authorImage from "../assets/images/avatar2.jpeg";
 
@@ -129,6 +153,38 @@ useHead({
     }
   ]
 });
+
+// Typewriter Effect
+const authorQuote = "Музыкант • Режиссер • Поэтесса";
+const displayedText = ref('');
+const isTypingComplete = ref(false);
+
+onMounted(() => {
+  let index = 0;
+  const typeSpeed = 80;
+
+  const typeWriter = () => {
+    if (index < authorQuote.length) {
+      displayedText.value += authorQuote[index];
+      index++;
+      setTimeout(typeWriter, typeSpeed);
+    } else {
+      isTypingComplete.value = true;
+    }
+  };
+
+  setTimeout(typeWriter, 500); // Start after small delay
+});
+
+// Floating Poetry Words
+const floatingWords = ref([
+  { text: 'любовь', x: 10, y: 20, delay: 0, duration: 20 },
+  { text: 'душа', x: 70, y: 30, delay: 2, duration: 25 },
+  { text: 'свет', x: 30, y: 60, delay: 4, duration: 22 },
+  { text: 'мечта', x: 80, y: 70, delay: 1, duration: 23 },
+  { text: 'поэзия', x: 50, y: 40, delay: 3, duration: 24 },
+  { text: 'сердце', x: 20, y: 80, delay: 5, duration: 21 },
+]);
 
 // Author Bio
 const authorBio =
@@ -188,8 +244,135 @@ const getCategoryClass = (category) => {
   return classes[category] || "bg-gray-100 text-gray-800";
 };
 </script>
+
 <style scoped>
+/* Floating Words Animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-30px) translateX(15px) rotate(2deg);
+  }
+
+  50% {
+    transform: translateY(-20px) translateX(-10px) rotate(-1deg);
+  }
+
+  75% {
+    transform: translateY(-40px) translateX(5px) rotate(1deg);
+  }
+}
+
+.floating-word {
+  animation: float linear infinite;
+}
+
+/* Typewriter Cursor */
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor {
+  animation: blink 1s infinite;
+  color: rgb(251, 191, 36);
+}
+
+/* Breathing Glow */
+@keyframes breathe {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), 0 0 40px rgba(251, 191, 36, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3);
+  }
+}
+
+.breathing-glow {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Ink Spread Effect */
+.stat-card {
+  position: relative;
+}
+
+.ink-spread {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease-out, height 0.6s ease-out;
+  pointer-events: none;
+}
+
+.stat-card:hover .ink-spread {
+  width: 300px;
+  height: 300px;
+}
+
+/* Staggered Fade-In for Works */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.work-card {
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Enhanced Author Image */
 .author-image {
   filter: brightness(110%) contrast(110%) saturate(100%) hue-rotate(5deg) drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.author-image:hover {
+  transform: scale(1.05);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+
+  .floating-word,
+  .breathing-glow,
+  .work-card {
+    animation: none;
+  }
+
+  .typing-cursor {
+    animation: none;
+    opacity: 0;
+  }
+
+  .stat-card:hover .ink-spread {
+    transition: none;
+  }
 }
 </style>
