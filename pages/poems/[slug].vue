@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen transition-colors duration-300">
+  <div
+    class="min-h-screen bg-gradient-to-b from-slate-100 to-slate-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
 
     <!-- Hero Section with Dynamic Parallax -->
     <header class="relative h-[50vh] sm:h-[40vh] overflow-hidden" @mousemove="handleParallax" ref="heroSection">
@@ -59,15 +60,18 @@
     <main class="container mx-auto px-6 py-16">
       <div class="max-w-3xl mx-auto">
         <!-- Poem Content Section -->
-        <article class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-8 mb-12 transition-colors duration-300">
-          <div class="prose prose-lg prose-slate mx-auto">
+        <article
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-slate-200 dark:border-gray-700 p-8 mb-12 transition-all duration-300 hover:shadow-2xl">
+          <div class="prose prose-lg prose-slate dark:prose-invert mx-auto">
             <div v-if="post?.body" v-for="(block, index) in post.body" :key="index"
-              class="whitespace-pre-wrap font-serif" v-html="formatPoem(block.children[0].text)"></div>
+              class="whitespace-pre-wrap font-serif text-slate-700 dark:text-gray-100"
+              v-html="formatPoem(block.children[0].text)"></div>
           </div>
         </article>
 
         <!-- Engagement Section -->
-        <div class="rounded-2xl shadow-sm p-6 mb-12 bg-white dark:bg-slate-800 transition-colors duration-300">
+        <div
+          class="rounded-2xl shadow-xl border border-slate-200 dark:border-gray-700 p-6 mb-12 bg-white dark:bg-gray-800 transition-all duration-300">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <!-- Like Button -->
@@ -103,7 +107,7 @@
                 </button>
 
                 <div v-if="isShareOpen" v-click-outside="closeShare"
-                  class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-10 bg-white dark:bg-slate-700">
+                  class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-10 bg-white dark:bg-gray-700 border border-slate-200 dark:border-gray-600">
                   <button v-for="platform in sharePlatforms" :key="platform.name" @click="shareOn(platform.name)"
                     class="w-full px-4 py-2 text-left flex items-center space-x-3 transition-colors text-slate-700 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black">
                     <i :class="platform.icon"></i>
@@ -116,7 +120,8 @@
         </div>
 
         <!-- Comments Section -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 transition-colors duration-300">
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-slate-200 dark:border-gray-700 p-6 transition-all duration-300">
           <h3 class="text-xl font-semibold mb-6 text-slate-900 dark:text-white">
             Комментарии
           </h3>
@@ -129,7 +134,7 @@
                 alt="User Avatar" class="w-10 h-10 rounded-full" />
               <div class="flex-1">
                 <textarea v-model="newComment" placeholder="Поделитесь своими мыслями..."
-                  class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                  class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none transition-colors duration-300"
                   rows="3"></textarea>
                 <div class="mt-3 flex justify-end">
                   <button @click="submitComment"
@@ -149,25 +154,25 @@
                 src="https://banner2.cleanpng.com/20190702/tl/kisspng-computer-icons-portable-network-graphics-avatar-tr-clip-directory-professional-transparent-amp-png-1713882914216.webp"
                 alt="Comment Avatar" class="w-10 h-10 rounded-full" />
               <div class="flex-1">
-                <div class="bg-slate-50 rounded-lg p-4">
+                <div class="bg-slate-50 dark:bg-gray-700 rounded-lg p-4 transition-colors duration-300">
                   <div class="flex items-center justify-between mb-2">
-                    <h4 class="font-medium text-slate-900">
+                    <h4 class="font-medium text-slate-900 dark:text-white">
                       {{ comment.author }}
                     </h4>
-                    <span class="text-sm text-slate-500">{{
+                    <span class="text-sm text-slate-500 dark:text-gray-400">{{
                       formatCommentDate(comment.date)
                       }}</span>
                   </div>
-                  <p class="text-slate-700">{{ comment.content }}</p>
+                  <p class="text-slate-700 dark:text-gray-300">{{ comment.content }}</p>
                   <div class="mt-3 flex items-center space-x-4">
                     <button @click="toggleCommentLike(comment.id)"
-                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
-                      :class="{ 'text-amber-600': comment.isLiked }">
+                      class="text-sm text-slate-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 focus:ring-2 focus:ring-amber-500 transition-colors"
+                      :class="{ 'text-amber-600 dark:text-amber-400': comment.isLiked }">
                       <i class="far fa-heart" :class="{ fas: comment.isLiked }"></i>
                       <span class="ml-1">{{ comment.likes }}</span>
                     </button>
                     <button @click="replyToComment(comment.id)"
-                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors">
+                      class="text-sm text-slate-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 focus:ring-2 focus:ring-amber-500 transition-colors">
                       <i class="fas fa-reply"></i>
                       <span class="ml-1">Ответить</span>
                     </button>
@@ -455,80 +460,121 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Dark Theme */
-html.dark .bg-white {
-  background-color: #1e1e1e;
-  color: white;
-}
-
-html.dark .text-slate-700 {
-  color: #ccc;
-}
-
-html.dark .prose {
-  color: white;
-  background-color: #1e1e1e;
-}
-
-html.dark .bg-amber-500 {
-  background-color: #ffd700;
-  /* Adjust amber color for dark theme */
-}
-
+/* Prose styling with dark mode support */
 .prose {
-  @apply text-slate-700 text-lg;
+  color: rgb(51 65 85);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+:global(.dark) .prose {
+  color: rgb(229 231 235);
 }
 
 .prose div {
-  @apply leading-relaxed;
+  line-height: 1.625;
 }
 
 .prose h2 {
-  @apply text-2xl sm:text-3xl font-semibold text-gray-800 mt-8 mb-4;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgb(31 41 55);
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+:global(.dark) .prose h2 {
+  color: rgb(229 231 235);
 }
 
 .prose h3 {
-  @apply text-2xl font-medium text-gray-800 mt-6 mb-3;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: rgb(31 41 55);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+:global(.dark) .prose h3 {
+  color: rgb(229 231 235);
 }
 
 .prose p {
-  @apply text-lg mb-4 leading-relaxed;
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+  line-height: 1.625;
 }
 
 .prose ul {
-  @apply list-disc list-inside mb-4;
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: 1rem;
 }
 
 .prose ol {
-  @apply list-decimal list-inside mb-4;
+  list-style-type: decimal;
+  list-style-position: inside;
+  margin-bottom: 1rem;
 }
 
 .prose li {
-  @apply mb-2;
+  margin-bottom: 0.5rem;
 }
 
 .prose a {
-  @apply text-amber-600 hover:text-amber-700 underline;
+  color: rgb(217 119 6);
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  color: rgb(180 83 9);
 }
 
 .prose img {
-  @apply rounded-lg my-6;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-amber-500 pl-4 py-1 my-6 text-gray-600 italic;
+  border-left: 4px solid rgb(245 158 11);
+  padding-left: 1rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: rgb(75 85 99);
+  font-style: italic;
+}
+
+:global(.dark) .prose blockquote {
+  color: rgb(156 163 175);
 }
 
 .prose blockquote p {
-  @apply italic mb-0;
+  font-style: italic;
+  margin-bottom: 0;
 }
 
 .prose code {
-  @apply bg-gray-100 rounded px-1;
+  background-color: rgb(243 244 246);
+  border-radius: 0.25rem;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+:global(.dark) .prose code {
+  background-color: rgb(55 65 81);
 }
 
 .prose pre {
-  @apply bg-gray-800 text-white p-4 rounded-lg my-6 overflow-x-auto;
+  background-color: rgb(31 41 55);
+  color: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
 }
 
 /* Add spacing between multi-level lists */
@@ -536,11 +582,17 @@ html.dark .bg-amber-500 {
 .prose ol ol,
 .prose ul ol,
 .prose ol ul {
-  @apply mt-2 ml-6;
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
 }
 
 /* Add hover effects for comment interactions */
 .hover-effect {
-  @apply hover:bg-amber-50 hover:text-amber-600 transition-colors duration-200;
+  transition: background-color 200ms, color 200ms;
+}
+
+.hover-effect:hover {
+  background-color: rgb(254 252 232);
+  color: rgb(217 119 6);
 }
 </style>
