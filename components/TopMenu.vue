@@ -1,18 +1,14 @@
 <template>
   <header
-    class="bg-white/95 dark:bg-gray-900/95 text-slate-900 dark:text-white border-b border-amber-500/10 dark:border-amber-800/20 shadow-lg transition-colors duration-300 backdrop-blur-sm"
-  >
+    class="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 text-slate-900 dark:text-white border-b border-amber-500/10 dark:border-amber-800/20 shadow-lg transition-colors duration-300 backdrop-blur-sm">
     <div class="container mx-auto flex items-center justify-between py-4 px-6">
       <!-- Logo -->
       <div class="text-2xl font-serif">
-        <NuxtLink
-          to="/"
-          class="hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 relative group"
-        >
+        <NuxtLink to="/"
+          class="hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 relative group">
           Солнечные сказки
           <span
-            class="absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-          ></span>
+            class="absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
         </NuxtLink>
       </div>
 
@@ -20,123 +16,84 @@
       <div class="flex items-center space-x-4 md:hidden">
         <ThemeToggle />
         <!-- Hamburger Icon (Mobile) -->
-        <button
-          class="text-xl hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300"
-          @click="toggleMenu"
-          aria-label="Toggle navigation menu"
-        >
+        <button class="text-xl hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300"
+          @click="toggleMenu" aria-label="Toggle navigation menu">
           <i class="fas" :class="menuOpen ? 'fa-times' : 'fa-bars'"></i>
         </button>
       </div>
 
       <!-- Navigation Links -->
-      <nav
-        :class="[
-          'absolute md:static top-16 left-0 w-full md:w-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm md:backdrop-blur-none md:bg-transparent p-4 md:p-0 md:flex space-y-4 md:space-y-0 md:space-x-6 z-50 transform transition-all duration-300 ease-in-out shadow-lg md:shadow-none',
-          menuOpen
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 -translate-y-5 pointer-events-none',
-          'md:opacity-100 md:translate-y-0 md:pointer-events-auto',
-        ]"
-      >
+      <nav :class="[
+        'absolute md:static top-16 left-0 w-full md:w-auto bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm md:backdrop-blur-none md:bg-transparent p-4 md:p-0 md:flex space-y-4 md:space-y-0 md:space-x-6 z-50 transform transition-all duration-300 ease-in-out shadow-lg md:shadow-none',
+        menuOpen
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 -translate-y-5 pointer-events-none',
+        'md:opacity-100 md:translate-y-0 md:pointer-events-auto',
+      ]">
         <!-- Links -->
-        <NuxtLink
-          v-for="(link, index) in links"
-          :key="index"
-          :to="link.href"
+        <NuxtLink v-for="(link, index) in links" :key="index" :to="link.href"
           class="text-lg hover:text-amber-600 dark:hover:text-amber-400 block md:inline transition-colors duration-300 relative group"
-          exact-active-class="text-amber-600 dark:text-amber-400"
-          @click="closeMenu"
-        >
+          exact-active-class="text-amber-600 dark:text-amber-400" @click="closeMenu">
           {{ link.text }}
-          <span
-            :class="[
-              'absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 hidden md:block',
-              { 'scale-x-100': $route.path === link.href },
-            ]"
-          ></span>
+          <span :class="[
+            'absolute -bottom-1 left-0 w-full h-px bg-amber-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 hidden md:block',
+            { 'scale-x-100': $route.path === link.href },
+          ]"></span>
         </NuxtLink>
 
         <!-- Search Bar for Mobile -->
         <div class="block md:hidden">
           <div
             class="flex items-center space-x-2 bg-slate-100 dark:bg-gray-800/70 rounded-lg px-4 py-2 focus-within:ring-1 focus-within:ring-amber-500/50 transition duration-300"
-            :class="{ 'ring-1 ring-amber-500/50': searchQuery }"
-          >
+            :class="{ 'ring-1 ring-amber-500/50': searchQuery }">
             <i class="fas fa-search text-gray-400"></i>
-            <input
-              type="text"
-              placeholder="Поиск..."
+            <input type="text" placeholder="Поиск..."
               class="w-full bg-transparent placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none text-slate-900 dark:text-white"
-              v-model="searchQuery"
-              @input="handleSearch"
-            />
-            <button
-              v-if="searchQuery"
-              @click="clearSearch"
+              v-model="searchQuery" @input="handleSearch" />
+            <button v-if="searchQuery" @click="clearSearch"
               class="text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300"
-              aria-label="Clear search"
-            >
+              aria-label="Clear search">
               <i class="fas fa-times"></i>
             </button>
           </div>
           <!-- Mobile Search Results -->
-          <transition
-            enter-active-class="transition duration-200 ease-out"
-            enter-from-class="transform scale-95 opacity-0"
-            enter-to-class="transform scale-100 opacity-100"
-            leave-active-class="transition duration-150 ease-in"
-            leave-from-class="transform scale-100 opacity-100"
-            leave-to-class="transform scale-95 opacity-0"
-          >
-            <div
-              v-if="searchQuery && searchResults.length === 0"
-              class="mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-slate-200 dark:border-gray-700/50 p-4 text-center"
-            >
+          <transition enter-active-class="transition duration-200 ease-out"
+            enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-150 ease-in" leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0">
+            <div v-if="searchQuery && searchResults.length === 0"
+              class="mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-slate-200 dark:border-gray-700/50 p-4 text-center">
               <i class="fas fa-search text-amber-500 dark:text-amber-400 text-2xl mb-2"></i>
               <p class="text-slate-600 dark:text-gray-400 max-w-full">
                 Ничего не найдено по запросу "<span
-                  class="font-medium text-amber-600 dark:text-amber-400 truncate inline-block max-w-[80%]"
-                  >{{ searchQuery }}</span
-                >"
+                  class="font-medium text-amber-600 dark:text-amber-400 truncate inline-block max-w-[80%]">{{
+                  searchQuery }}</span>"
               </p>
               <p class="text-sm text-slate-500 dark:text-gray-500 mt-1">
                 Попробуйте изменить запрос.
               </p>
             </div>
-            <div
-              v-else-if="searchResults.length > 0"
-              class="mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-slate-200 dark:border-gray-700/50"
-            >
+            <div v-else-if="searchResults.length > 0"
+              class="mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg border border-slate-200 dark:border-gray-700/50">
               <div class="max-h-64 overflow-y-auto">
-                <NuxtLink
-                  v-for="poem in searchResults"
-                  :key="poem.id"
-                  :to="`/poems/${poem.slug.current}`"
+                <NuxtLink v-for="poem in searchResults" :key="poem.id" :to="`/poems/${poem.slug.current}`"
                   @click="handleResultClick"
-                  class="flex items-center px-4 py-3 hover:bg-slate-100 dark:hover:bg-gray-700/50 transition-colors duration-300 group"
-                >
+                  class="flex items-center px-4 py-3 hover:bg-slate-100 dark:hover:bg-gray-700/50 transition-colors duration-300 group">
                   <div class="flex-1">
                     <div
-                      class="font-medium text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"
-                    >
+                      class="font-medium text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300">
                       {{ poem.title }}
                     </div>
-                    <div
-                      v-if="poem.excerpt"
-                      class="text-sm text-slate-500 dark:text-gray-400 mt-1 line-clamp-1"
-                    >
+                    <div v-if="poem.excerpt" class="text-sm text-slate-500 dark:text-gray-400 mt-1 line-clamp-1">
                       {{ poem.excerpt }}
                     </div>
                   </div>
                   <i
-                    class="fas fa-chevron-right text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"
-                  ></i>
+                    class="fas fa-chevron-right text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"></i>
                 </NuxtLink>
               </div>
               <div
-                class="px-4 py-2 border-t border-slate-200 dark:border-gray-700/50 text-sm text-slate-500 dark:text-gray-400"
-              >
+                class="px-4 py-2 border-t border-slate-200 dark:border-gray-700/50 text-sm text-slate-500 dark:text-gray-400">
                 {{ searchResults.length }} результат(ов)
               </div>
             </div>
@@ -148,83 +105,55 @@
       <div class="hidden md:flex items-center relative">
         <div
           class="flex items-center space-x-2 bg-slate-100 dark:bg-gray-800/70 rounded-lg px-4 py-2 focus-within:ring-1 focus-within:ring-amber-500/50 transition duration-300"
-          :class="{ 'ring-1 ring-amber-500/50': searchQuery }"
-          style="width: 16rem"
-        >
+          :class="{ 'ring-1 ring-amber-500/50': searchQuery }" style="width: 16rem">
           <i class="fas fa-search text-gray-400"></i>
-          <input
-            type="text"
-            placeholder="Поиск..."
+          <input type="text" placeholder="Поиск..."
             class="bg-transparent placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none text-slate-900 dark:text-white w-full"
-            v-model="searchQuery"
-            @input="handleSearch"
-          />
-          <button
-            v-if="searchQuery"
-            @click="clearSearch"
+            v-model="searchQuery" @input="handleSearch" />
+          <button v-if="searchQuery" @click="clearSearch"
             class="text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300"
-            aria-label="Clear search"
-          >
+            aria-label="Clear search">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <!-- Desktop Search Results -->
-        <transition
-          enter-active-class="transition duration-200 ease-out"
-          enter-from-class="transform scale-95 opacity-0"
-          enter-to-class="transform scale-100 opacity-100"
-          leave-active-class="transition duration-150 ease-in"
-          leave-from-class="transform scale-100 opacity-100"
-          leave-to-class="transform scale-95 opacity-0"
-        >
-          <div
-            v-if="searchQuery && searchResults.length === 0"
-            class="absolute top-full left-0 w-full mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-slate-200 dark:border-gray-700/50 p-4 text-center"
-          >
+        <transition enter-active-class="transition duration-200 ease-out"
+          enter-from-class="transform scale-95 opacity-0" enter-to-class="transform scale-100 opacity-100"
+          leave-active-class="transition duration-150 ease-in" leave-from-class="transform scale-100 opacity-100"
+          leave-to-class="transform scale-95 opacity-0">
+          <div v-if="searchQuery && searchResults.length === 0"
+            class="absolute top-full left-0 w-full mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-slate-200 dark:border-gray-700/50 p-4 text-center">
             <i class="fas fa-search text-amber-500 dark:text-amber-400 text-2xl mb-2"></i>
             <p class="text-slate-600 dark:text-gray-400 max-w-full">
               Ничего не найдено по запросу "<span
-                class="font-medium text-amber-600 dark:text-amber-400 truncate inline-block max-w-[80%]"
-                >{{ searchQuery }}</span
-              >"
+                class="font-medium text-amber-600 dark:text-amber-400 truncate inline-block max-w-[80%]">{{ searchQuery
+                }}</span>"
             </p>
             <p class="text-sm text-slate-500 dark:text-gray-500 mt-1">
               Попробуйте изменить запрос.
             </p>
           </div>
-          <div
-            v-else-if="searchResults.length > 0"
-            class="absolute top-full left-0 w-full mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-slate-200 dark:border-gray-700/50"
-          >
+          <div v-else-if="searchResults.length > 0"
+            class="absolute top-full left-0 w-full mt-2 bg-white dark:bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg z-50 border border-slate-200 dark:border-gray-700/50">
             <div class="max-h-64 overflow-y-auto">
-              <NuxtLink
-                v-for="poem in searchResults"
-                :key="poem.id"
-                :to="`/poems/${poem.slug.current}`"
+              <NuxtLink v-for="poem in searchResults" :key="poem.id" :to="`/poems/${poem.slug.current}`"
                 @click="handleResultClick"
-                class="flex items-center px-4 py-3 hover:bg-slate-100 dark:hover:bg-gray-700/50 transition-colors duration-300 group"
-              >
+                class="flex items-center px-4 py-3 hover:bg-slate-100 dark:hover:bg-gray-700/50 transition-colors duration-300 group">
                 <div class="flex-1">
                   <div
-                    class="font-medium text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"
-                  >
+                    class="font-medium text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300">
                     {{ poem.title }}
                   </div>
-                  <div
-                    v-if="poem.excerpt"
-                    class="text-sm text-slate-500 dark:text-gray-400 mt-1 line-clamp-1"
-                  >
+                  <div v-if="poem.excerpt" class="text-sm text-slate-500 dark:text-gray-400 mt-1 line-clamp-1">
                     {{ poem.excerpt }}
                   </div>
                 </div>
                 <i
-                  class="fas fa-chevron-right text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"
-                ></i>
+                  class="fas fa-chevron-right text-gray-400 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"></i>
               </NuxtLink>
             </div>
             <div
-              class="px-4 py-2 border-t border-slate-200 dark:border-gray-700/50 text-sm text-slate-500 dark:text-gray-400"
-            >
+              class="px-4 py-2 border-t border-slate-200 dark:border-gray-700/50 text-sm text-slate-500 dark:text-gray-400">
               {{ searchResults.length }} результат(ов)
             </div>
           </div>

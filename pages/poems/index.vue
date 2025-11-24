@@ -95,7 +95,7 @@
                     Всего стихотворений:
                     <span class="font-medium text-slate-900 dark:text-white">{{
                       totalPoemCount
-                      }}</span>
+                    }}</span>
                   </div>
                 </div>
 
@@ -134,7 +134,7 @@
                             <span class="text-slate-900 dark:text-white">Все годы</span>
                             <span class="text-sm text-slate-500 dark:text-gray-400">{{
                               totalPoemCount
-                              }}</span>
+                            }}</span>
                           </div>
                         </button>
 
@@ -149,7 +149,7 @@
                               <span class="text-slate-900 dark:text-white">{{ year.value }}</span>
                               <span class="text-sm text-slate-500 dark:text-gray-400">{{
                                 year.count
-                                }}</span>
+                              }}</span>
                             </div>
                           </button>
                         </div>
@@ -176,19 +176,19 @@
                       <span>Самый ранний год:</span>
                       <span class="font-medium text-slate-900 dark:text-white">{{
                         earliestYear
-                        }}</span>
+                      }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm text-slate-600 dark:text-gray-300">
                       <span>Последний год:</span>
                       <span class="font-medium text-slate-900 dark:text-white">{{
                         latestYear
-                        }}</span>
+                      }}</span>
                     </div>
                     <div class="flex items-center justify-between text-sm text-slate-600 dark:text-gray-300">
                       <span>Стихов в этом году:</span>
                       <span class="font-medium text-slate-900 dark:text-white">{{
                         currentYearPoemCount
-                        }}</span>
+                      }}</span>
                     </div>
                   </div>
                 </div>
@@ -353,6 +353,18 @@ const { data: posts, loading, error } = fetchPosts();
 // Get projectId and dataset from the Sanity client config
 const { projectId, dataset } = useSanity().client.config();
 const urlFor = getImageUrl(projectId, dataset);
+
+// SEO: Page title and meta
+useHead({
+  title: 'Все стихотворения - Солнечные сказки',
+  meta: [
+    {
+      name: 'description',
+      content: 'Полная коллекция стихотворений Керен Виленской. Исследуйте поэзию по годам и категориям.'
+    }
+  ]
+});
+
 
 // Search and filter parameters
 const searchQuery = ref("");

@@ -2,74 +2,48 @@
   <div class="min-h-screen transition-colors duration-300">
 
     <!-- Hero Section with Dynamic Parallax -->
-    <header
-      class="relative h-[50vh] sm:h-[40vh] overflow-hidden"
-      @mousemove="handleParallax"
-      ref="heroSection"
-    >
+    <header class="relative h-[50vh] sm:h-[40vh] overflow-hidden" @mousemove="handleParallax" ref="heroSection">
       <!-- Background Image -->
-      <div
-        class="absolute inset-0 bg-cover bg-center transform transition-transform duration-200"
-        :style="{
-          backgroundImage: `url(${backgroundImage})`,
-          transform: `scale(1.1) translate(${parallaxX}px, ${parallaxY}px)`,
-        }"
-      ></div>
+      <div class="absolute inset-0 bg-cover bg-center transform transition-transform duration-200" :style="{
+        backgroundImage: `url(${backgroundImage})`,
+        transform: `scale(1.1) translate(${parallaxX}px, ${parallaxY}px)`,
+      }"></div>
       <!-- Overlay Gradient -->
-      <div
-        class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-amber-900/90"
-      ></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/80 to-amber-900/90"></div>
 
       <!-- Content -->
-      <div
-        class="relative container mx-auto px-6 h-full flex flex-col justify-center"
-      >
-        <nuxt-link
-          to="/poems"
-          class="group inline-flex items-center text-amber-100 mb-8 hover:text-amber-200 transition-all w-fit"
-        >
+      <div class="relative container mx-auto px-6 h-full flex flex-col justify-center">
+        <nuxt-link to="/poems"
+          class="group inline-flex items-center text-amber-100 mb-8 hover:text-amber-200 transition-all w-fit">
           <div class="flex items-center space-x-2 relative">
-            <i
-              class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"
-            ></i>
+            <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
             <span class="text-sm font-medium">Вернуться к списку</span>
           </div>
         </nuxt-link>
 
         <div class="space-y-6">
-          <h1
-            class="text-5xl md:text-6xl font-serif text-white leading-tight max-w-4xl"
-            :class="{ 'opacity-0 translate-y-4': !post }"
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0 }"
-          >
+          <h1 class="text-5xl md:text-6xl font-serif text-white leading-tight max-w-4xl"
+            :class="{ 'opacity-0 translate-y-4': !post }" :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0 }">
             {{ post?.title }}
           </h1>
 
           <!-- Author Name -->
-          <div
-            class="text-xl text-amber-100 font-medium"
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, delay: 100 }"
-          >
+          <div class="text-xl text-amber-100 font-medium" :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0, delay: 100 }">
             {{ post?.author }}
           </div>
 
-          <div
-            class="flex flex-wrap items-center gap-4 text-amber-100"
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, delay: 200 }"
-          >
+          <div class="flex flex-wrap items-center gap-4 text-amber-100" :initial="{ opacity: 0, y: 20 }"
+            :enter="{ opacity: 1, y: 0, delay: 200 }">
             <span class="flex items-center space-x-2">
               <i class="far fa-calendar"></i>
               <time :datetime="post?.publishedAt">
                 {{ formatDate(post?.publishedAt) }}
               </time>
             </span>
-            <div
-              v-if="post?.category"
-              class="px-4 py-1.5 text-sm font-medium rounded-full bg-amber-500/20 text-amber-100 backdrop-blur-sm"
-            >
+            <div v-if="post?.category"
+              class="px-4 py-1.5 text-sm font-medium rounded-full bg-amber-500/20 text-amber-100 backdrop-blur-sm">
               {{ post.category }}
             </div>
           </div>
@@ -77,10 +51,8 @@
       </div>
 
       <!-- Progress Bar -->
-      <div
-        class="absolute bottom-0 left-0 h-1 bg-amber-500/30 backdrop-blur-sm"
-        :style="{ width: `${readingProgress}%` }"
-      ></div>
+      <div class="absolute bottom-0 left-0 h-1 bg-amber-500/30 backdrop-blur-sm"
+        :style="{ width: `${readingProgress}%` }"></div>
     </header>
 
     <!-- Enhanced Main Content -->
@@ -89,35 +61,26 @@
         <!-- Poem Content Section -->
         <article class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-8 mb-12 transition-colors duration-300">
           <div class="prose prose-lg prose-slate mx-auto">
-            <div
-              v-if="post?.body"
-              v-for="(block, index) in post.body"
-              :key="index"
-              class="whitespace-pre-wrap font-serif"
-              v-html="formatPoem(block.children[0].text)"
-            ></div>
+            <div v-if="post?.body" v-for="(block, index) in post.body" :key="index"
+              class="whitespace-pre-wrap font-serif" v-html="formatPoem(block.children[0].text)"></div>
           </div>
         </article>
 
         <!-- Engagement Section -->
-        <div
-          class="rounded-2xl shadow-sm p-6 mb-12 bg-white dark:bg-slate-800 transition-colors duration-300"
-        >
+        <div class="rounded-2xl shadow-sm p-6 mb-12 bg-white dark:bg-slate-800 transition-colors duration-300">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <!-- Like Button -->
               <button
                 class="flex items-center space-x-2 px-4 py-2 rounded-full transition-colors focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black"
-                @click="toggleLike"
-              >
+                @click="toggleLike">
                 <i class="far fa-heart" :class="{ fas: isLiked }"></i>
                 <span>{{ likeCount }}</span>
               </button>
 
               <!-- Comment Button -->
               <button
-                class="flex items-center space-x-2 px-4 py-2 rounded-full transition-colors focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black"
-              >
+                class="flex items-center space-x-2 px-4 py-2 rounded-full transition-colors focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black">
                 <i class="far fa-comment"></i>
                 <span>{{ comments.length }}</span>
               </button>
@@ -127,8 +90,7 @@
               <!-- Bookmark Button -->
               <button
                 class="p-2.5 rounded-full transition-colors focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black"
-                @click="toggleBookmark"
-              >
+                @click="toggleBookmark">
                 <i class="far fa-bookmark" :class="{ fas: isBookmarked }"></i>
               </button>
 
@@ -136,22 +98,14 @@
               <div class="relative">
                 <button
                   class="p-2.5 rounded-full transition-colors focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black"
-                  @click="toggleShare"
-                >
+                  @click="toggleShare">
                   <i class="fas fa-share-alt"></i>
                 </button>
 
-                <div
-                  v-if="isShareOpen"
-                  v-click-outside="closeShare"
-                  class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-10 bg-white dark:bg-slate-700"
-                >
-                  <button
-                    v-for="platform in sharePlatforms"
-                    :key="platform.name"
-                    @click="shareOn(platform.name)"
-                    class="w-full px-4 py-2 text-left flex items-center space-x-3 transition-colors text-slate-700 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black"
-                  >
+                <div v-if="isShareOpen" v-click-outside="closeShare"
+                  class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-2 z-10 bg-white dark:bg-slate-700">
+                  <button v-for="platform in sharePlatforms" :key="platform.name" @click="shareOn(platform.name)"
+                    class="w-full px-4 py-2 text-left flex items-center space-x-3 transition-colors text-slate-700 dark:text-white hover:bg-amber-200 hover:text-amber-600 dark:hover:bg-amber-300 dark:hover:text-black">
                     <i :class="platform.icon"></i>
                     <span>{{ platform.label }}</span>
                   </button>
@@ -163,9 +117,7 @@
 
         <!-- Comments Section -->
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm p-6 transition-colors duration-300">
-          <h3
-            class="text-xl font-semibold mb-6 text-slate-900 dark:text-white"
-          >
+          <h3 class="text-xl font-semibold mb-6 text-slate-900 dark:text-white">
             Комментарии
           </h3>
 
@@ -174,22 +126,15 @@
             <div class="flex items-start space-x-4">
               <img
                 src="https://banner2.cleanpng.com/20190702/tl/kisspng-computer-icons-portable-network-graphics-avatar-tr-clip-directory-professional-transparent-amp-png-1713882914216.webp"
-                alt="User Avatar"
-                class="w-10 h-10 rounded-full"
-              />
+                alt="User Avatar" class="w-10 h-10 rounded-full" />
               <div class="flex-1">
-                <textarea
-                  v-model="newComment"
-                  placeholder="Поделитесь своими мыслями..."
+                <textarea v-model="newComment" placeholder="Поделитесь своими мыслями..."
                   class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-                  rows="3"
-                ></textarea>
+                  rows="3"></textarea>
                 <div class="mt-3 flex justify-end">
-                  <button
-                    @click="submitComment"
+                  <button @click="submitComment"
                     class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
-                    :disabled="!newComment.trim()"
-                  >
+                    :disabled="!newComment.trim()">
                     Отправить
                   </button>
                 </div>
@@ -199,16 +144,10 @@
 
           <!-- Comments List -->
           <div class="space-y-6">
-            <div
-              v-for="comment in comments"
-              :key="comment.id"
-              class="flex space-x-4"
-            >
+            <div v-for="comment in comments" :key="comment.id" class="flex space-x-4">
               <img
                 src="https://banner2.cleanpng.com/20190702/tl/kisspng-computer-icons-portable-network-graphics-avatar-tr-clip-directory-professional-transparent-amp-png-1713882914216.webp"
-                alt="Comment Avatar"
-                class="w-10 h-10 rounded-full"
-              />
+                alt="Comment Avatar" class="w-10 h-10 rounded-full" />
               <div class="flex-1">
                 <div class="bg-slate-50 rounded-lg p-4">
                   <div class="flex items-center justify-between mb-2">
@@ -217,25 +156,18 @@
                     </h4>
                     <span class="text-sm text-slate-500">{{
                       formatCommentDate(comment.date)
-                    }}</span>
+                      }}</span>
                   </div>
                   <p class="text-slate-700">{{ comment.content }}</p>
                   <div class="mt-3 flex items-center space-x-4">
-                    <button
-                      @click="toggleCommentLike(comment.id)"
+                    <button @click="toggleCommentLike(comment.id)"
                       class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
-                      :class="{ 'text-amber-600': comment.isLiked }"
-                    >
-                      <i
-                        class="far fa-heart"
-                        :class="{ fas: comment.isLiked }"
-                      ></i>
+                      :class="{ 'text-amber-600': comment.isLiked }">
+                      <i class="far fa-heart" :class="{ fas: comment.isLiked }"></i>
                       <span class="ml-1">{{ comment.likes }}</span>
                     </button>
-                    <button
-                      @click="replyToComment(comment.id)"
-                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors"
-                    >
+                    <button @click="replyToComment(comment.id)"
+                      class="text-sm text-slate-500 hover:text-amber-600 focus:ring-2 focus:ring-amber-500 transition-colors">
                       <i class="fas fa-reply"></i>
                       <span class="ml-1">Ответить</span>
                     </button>
@@ -270,6 +202,20 @@ const { data: post } = await useSanityQuery<SanityDocument>(POST_QUERY, {
   slug,
 });
 const { projectId, dataset } = useSanity().client.config();
+
+// SEO: Dynamic page title based on poem
+useHead({
+  title: post.value?.title ? `${post.value.title} - Солнечные сказки` : 'Стихотворение - Солнечные сказки',
+  meta: [
+    {
+      name: 'description',
+      content: post.value?.body?.[0]?.children?.[0]?.text
+        ? post.value.body[0].children[0].text.slice(0, 155) + '...'
+        : 'Читайте стихотворение Керен Виленской'
+    }
+  ]
+});
+
 
 // State
 const heroSection = ref<HTMLElement | null>(null);
@@ -525,7 +471,8 @@ html.dark .prose {
 }
 
 html.dark .bg-amber-500 {
-  background-color: #ffd700; /* Adjust amber color for dark theme */
+  background-color: #ffd700;
+  /* Adjust amber color for dark theme */
 }
 
 .prose {

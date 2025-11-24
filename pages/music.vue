@@ -82,7 +82,7 @@
               <div class="flex flex-col text-xs">
                 <span class="text-slate-600">{{
                   formatTime(currentTime)
-                  }}</span>
+                }}</span>
                 <span class="text-slate-400">{{ formatTime(duration) }}</span>
               </div>
             </div>
@@ -133,7 +133,7 @@
                 <div class="flex items-center space-x-3">
                   <span class="text-sm text-slate-500">{{
                     formatTime(currentTime)
-                    }}</span>
+                  }}</span>
                   <div class="flex-1 relative">
                     <div class="w-full bg-slate-200 rounded-full h-1 cursor-pointer" @click="seek" ref="progressBar">
                       <div class="absolute top-0 left-0 h-1 bg-amber-500 rounded-full"
@@ -142,7 +142,7 @@
                   </div>
                   <span class="text-sm text-slate-500">{{
                     formatTime(duration)
-                    }}</span>
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -192,6 +192,18 @@ const previousVolume = ref(100);
 const currentTrackIndex = ref(-1);
 
 const { $axios } = useNuxtApp();
+
+// SEO: Page title and meta
+useHead({
+  title: 'Музыкальная коллекция - Солнечные сказки',
+  meta: [
+    {
+      name: 'description',
+      content: 'Слушайте музыкальные композиции Керен Виленской. Коллекция авторской музыки и песен.'
+    }
+  ]
+});
+
 
 // Fetch tracks on mount
 onMounted(async () => {

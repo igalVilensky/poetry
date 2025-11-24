@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col min-h-screen">
-    <!-- TopBar -->
+    <!-- Fixed TopMenu -->
     <TopMenu />
 
-    <!-- Page Content (Main Content) -->
-    <main>
-      <NuxtPage class="flex-grow" />
+    <!-- Page Content (Main Content) with padding for fixed header -->
+    <main class="flex-1 pt-[72px]">
+      <NuxtPage />
     </main>
 
-    <!-- Footer -->
-    <Footer />
+    <!-- Footer - mt-auto ensures it sticks to bottom on short pages -->
+    <Footer class="mt-auto" />
   </div>
 </template>
 

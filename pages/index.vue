@@ -147,10 +147,10 @@
                 <cite class="block text-center not-italic">
                   <span class="font-medium text-slate-900 dark:text-white block">{{
                     testimonial.name
-                    }}</span>
+                  }}</span>
                   <span class="text-sm text-slate-500 dark:text-gray-400">{{
                     testimonial.role
-                    }}</span>
+                  }}</span>
                 </cite>
               </div>
             </TransitionGroup>
@@ -169,8 +169,8 @@
             <div class="flex items-center gap-2">
               <button v-for="(_, index) in testimonials" :key="index" @click="currentIndex = index"
                 class="w-2 h-2 rounded-full transition-all duration-300" :class="currentIndex === index
-                    ? 'bg-amber-500 w-4'
-                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                  ? 'bg-amber-500 w-4'
+                  : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
                   ">
                 <span class="sr-only">Testimonial {{ index + 1 }}</span>
               </button>
@@ -262,6 +262,18 @@ onMounted(() => {
     setRecentPoems(featuredPoems.value);
   }
 });
+
+// SEO: Page title and meta
+useHead({
+  title: 'Солнечные сказки - Поэзия Керен Виленской',
+  meta: [
+    {
+      name: 'description',
+      content: 'Погрузитесь в мир поэзии Керен Виленской, где каждое слово — это луч света, освещающий глубины души. Стихи о жизни, любви и философии.'
+    }
+  ]
+});
+
 
 // Categories - This is a placeholder since we typically need to fetch categories separately or derive from posts
 const categories = computed(() => {

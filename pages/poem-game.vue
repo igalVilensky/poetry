@@ -102,8 +102,8 @@
           <div v-if="feedback" class="flex items-center justify-center mb-6 p-3 rounded-lg"
             :class="feedback.isCorrect ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'">
             <div :class="feedback.isCorrect
-                ? 'text-green-600 dark:text-green-400 animate-inferno'
-                : 'text-red-600 dark:text-red-400'
+              ? 'text-green-600 dark:text-green-400 animate-inferno'
+              : 'text-red-600 dark:text-red-400'
               " class="flex items-center text-lg">
               <i :class="feedback.icon" class="mr-2"></i>
               {{ feedback.message }}
@@ -167,6 +167,18 @@ const lives = ref(3);
 const gameOver = ref(false);
 const gameWon = ref(false);
 let interval = null;
+
+// SEO: Page title and meta
+useHead({
+  title: 'Огонь Лирики - Поэтическая игра',
+  meta: [
+    {
+      name: 'description',
+      content: 'Проверьте свои знания поэзии! Угадайте пропущенные слова в стихотворениях и разблокируйте новые произведения.'
+    }
+  ]
+});
+
 
 // Local storage
 const loadGameState = () => {
