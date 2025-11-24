@@ -1,56 +1,41 @@
 <template>
-  <main class="min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
+  <main
+    class="min-h-screen bg-gradient-to-b from-slate-100 to-slate-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
     <!-- Hero Section -->
     <div class="relative h-[60vh] sm:h-[50vh] overflow-hidden">
-      <div
-        class="absolute inset-0 bg-cover bg-center"
-        :style="{ backgroundImage: `url(${backgroundImage})` }"
-      ></div>
-      <div
-        class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"
-      ></div>
+      <div class="absolute inset-0 bg-cover bg-center" :style="{ backgroundImage: `url(${backgroundImage})` }"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"></div>
 
       <!-- Animated patterns -->
       <div class="absolute inset-0">
         <div class="absolute inset-0 opacity-30 animate-pulse">
-          <div
-            class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]"
-          ></div>
+          <div class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]">
+          </div>
         </div>
       </div>
 
-      <div
-        class="relative h-full container mx-auto px-6 flex flex-col justify-center items-center"
-      >
-        <h1
-          class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center"
-        >
+      <div class="relative h-full container mx-auto px-6 flex flex-col justify-center items-center">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl font-serif mb-8 leading-tight text-white text-center">
           Солнечные <span class="text-amber-300">сказки</span>
         </h1>
-        <p
-          class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light"
-        >
+        <p class="text-amber-100 max-w-2xl mx-auto text-lg sm:text-xl leading-relaxed text-center font-light">
           Погрузитесь в мир поэзии, где каждое слово — это луч света, освещающий
           глубины души
         </p>
-        <a
-          href="/poems"
-          class="mt-8 inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group"
-        >
+        <a href="/poems"
+          class="mt-8 inline-flex items-center px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-lg transition-all duration-300 group">
           Начать чтение
-          <i
-            class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"
-          ></i>
+          <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
         </a>
       </div>
     </div>
 
     <!-- Featured Poems Section -->
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-6">
         <div class="flex items-center justify-center mb-12">
           <div class="h-px w-12 bg-amber-500/30"></div>
-          <h2 class="text-3xl font-serif text-gray-900 px-4">
+          <h2 class="text-3xl font-serif text-slate-900 dark:text-white px-4">
             Избранные стихи
           </h2>
           <div class="h-px w-12 bg-amber-500/30"></div>
@@ -58,22 +43,17 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="poem in featuredPoems" :key="poem.id" class="group">
-            <article
-              class="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
-            >
-              <p class="text-sm text-amber-600 mb-2">{{ poem.category }}</p>
+            <article class="bg-slate-50 dark:bg-gray-800 rounded-lg p-6 hover:shadow-lg transition-all duration-300">
+              <p class="text-sm text-amber-600 dark:text-amber-400 mb-2">{{ poem.category }}</p>
               <h3
-                class="text-xl font-serif text-gray-900 mb-3 group-hover:text-amber-600 transition-colors"
-              >
+                class="text-xl font-serif text-slate-900 dark:text-white mb-3 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                 {{ poem.title }}
               </h3>
-              <p class="text-gray-600 mb-4 line-clamp-3">{{ poem.excerpt }}</p>
+              <p class="text-slate-600 dark:text-gray-300 mb-4 line-clamp-3">{{ poem.excerpt }}</p>
               <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-500">{{ poem.date }}</span>
-                <a
-                  :href="`/poems/${poem.slug.current}`"
-                  class="text-amber-600 hover:text-amber-700 transition-colors"
-                >
+                <span class="text-sm text-slate-500 dark:text-gray-400">{{ poem.date }}</span>
+                <a :href="`/poems/${poem.slug.current}`"
+                  class="text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors">
                   Читать полностью
                 </a>
               </div>
@@ -87,9 +67,7 @@
     <section class="py-20 bg-gray-900 text-white">
       <div class="container mx-auto px-6 text-center">
         <i class="fas fa-quote-left text-4xl text-amber-500/50 mb-6"></i>
-        <blockquote
-          class="text-2xl md:text-3xl font-serif mb-6 max-w-3xl mx-auto"
-        >
+        <blockquote class="text-2xl md:text-3xl font-serif mb-6 max-w-3xl mx-auto">
           "Поэзия — это живопись, которую слышат, а живопись — это поэзия,
           которую видят."
         </blockquote>
@@ -98,27 +76,19 @@
     </section>
 
     <!-- Categories Section -->
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-slate-50 dark:bg-gray-800 transition-colors duration-300">
       <div class="container mx-auto px-6">
-        <h2 class="text-3xl font-serif text-center text-gray-900 mb-12">
+        <h2 class="text-3xl font-serif text-center text-slate-900 dark:text-white mb-12">
           Категории
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <a
-            v-for="category in categories"
-            :key="category.id"
-            :href="category.url"
-            class="group relative h-48 rounded-lg overflow-hidden"
-          >
+          <a v-for="category in categories" :key="category.id" :href="category.url"
+            class="group relative h-48 rounded-lg overflow-hidden">
             <!-- Category background -->
-            <div
-              class="absolute inset-0 bg-gray-900 opacity-60 group-hover:opacity-70 transition-opacity"
-            ></div>
+            <div class="absolute inset-0 bg-gray-900 opacity-60 group-hover:opacity-70 transition-opacity"></div>
 
             <!-- Category content -->
-            <div
-              class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
-            >
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
               <i :class="['text-3xl mb-3 text-amber-400', category.icon]"></i>
               <h3 class="text-xl font-serif text-white mb-2">
                 {{ category.name }}
@@ -133,18 +103,19 @@
     </section>
 
     <!-- Poem Count Section -->
-    <section class="py-16 bg-white">
+    <section class="py-16 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-6">
         <Test :poems="posts" />
       </div>
     </section>
     <!-- Testimonials -->
-    <section class="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section
+      class="py-20 bg-gradient-to-b from-slate-50 to-white dark:from-gray-800 dark:to-gray-900 transition-colors duration-300">
       <div class="container mx-auto px-4">
         <!-- Section Header -->
         <div class="flex items-center justify-center mb-12">
           <div class="h-px w-12 bg-amber-500/30"></div>
-          <h2 class="text-3xl font-serif text-gray-900 px-4">
+          <h2 class="text-3xl font-serif text-slate-900 dark:text-white px-4">
             Отзывы читателей
           </h2>
           <div class="h-px w-12 bg-amber-500/30"></div>
@@ -154,26 +125,19 @@
         <div class="max-w-4xl mx-auto">
           <!-- Main Content Area with Fixed Height -->
           <div
-            class="h-[280px] sm:h-[240px] relative bg-white rounded-lg shadow-sm"
-          >
+            class="h-[280px] sm:h-[240px] relative bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-300">
             <TransitionGroup tag="div" name="slide" class="h-full">
-              <div
-                v-for="(testimonial, index) in testimonials"
-                :key="testimonial.id"
-                v-show="currentIndex === index"
-                class="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"
-              >
+              <div v-for="(testimonial, index) in testimonials" :key="testimonial.id" v-show="currentIndex === index"
+                class="absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
                 <!-- Quote Icon -->
-                <div class="text-amber-500/30">
+                <div class="text-amber-500/30 dark:text-amber-400/30">
                   <i class="fas fa-quote-left text-3xl"></i>
                 </div>
 
                 <!-- Testimonial Content -->
                 <div class="flex-1 flex items-center justify-center px-4">
                   <blockquote class="text-center">
-                    <p
-                      class="text-lg sm:text-xl text-gray-800 font-serif italic line-clamp-3"
-                    >
+                    <p class="text-lg sm:text-xl text-slate-800 dark:text-gray-200 font-serif italic line-clamp-3">
                       "{{ testimonial.quote }}"
                     </p>
                   </blockquote>
@@ -181,12 +145,12 @@
 
                 <!-- Author -->
                 <cite class="block text-center not-italic">
-                  <span class="font-medium text-gray-900 block">{{
+                  <span class="font-medium text-slate-900 dark:text-white block">{{
                     testimonial.name
-                  }}</span>
-                  <span class="text-sm text-gray-500">{{
+                    }}</span>
+                  <span class="text-sm text-slate-500 dark:text-gray-400">{{
                     testimonial.role
-                  }}</span>
+                    }}</span>
                 </cite>
               </div>
             </TransitionGroup>
@@ -195,42 +159,30 @@
           <!-- Navigation - Below Content -->
           <div class="mt-8 flex items-center justify-center gap-4">
             <!-- Previous Button -->
-            <button
-              @click="prevSlide"
-              class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm hover:bg-gray-50 text-gray-600 transition-colors"
-              :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }"
-              :disabled="currentIndex === 0"
-            >
+            <button @click="prevSlide"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-slate-50 dark:hover:bg-gray-600 text-slate-600 dark:text-gray-300 transition-colors"
+              :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }" :disabled="currentIndex === 0">
               <i class="fas fa-chevron-left text-sm"></i>
             </button>
 
             <!-- Dots -->
             <div class="flex items-center gap-2">
-              <button
-                v-for="(_, index) in testimonials"
-                :key="index"
-                @click="currentIndex = index"
-                class="w-2 h-2 rounded-full transition-all duration-300"
-                :class="
-                  currentIndex === index
+              <button v-for="(_, index) in testimonials" :key="index" @click="currentIndex = index"
+                class="w-2 h-2 rounded-full transition-all duration-300" :class="currentIndex === index
                     ? 'bg-amber-500 w-4'
-                    : 'bg-gray-300 hover:bg-gray-400'
-                "
-              >
+                    : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                  ">
                 <span class="sr-only">Testimonial {{ index + 1 }}</span>
               </button>
             </div>
 
             <!-- Next Button -->
-            <button
-              @click="nextSlide"
-              class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm hover:bg-gray-50 text-gray-600 transition-colors"
+            <button @click="nextSlide"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-slate-50 dark:hover:bg-gray-600 text-slate-600 dark:text-gray-300 transition-colors"
               :class="{
                 'opacity-50 cursor-not-allowed':
                   currentIndex === testimonials.length - 1,
-              }"
-              :disabled="currentIndex === testimonials.length - 1"
-            >
+              }" :disabled="currentIndex === testimonials.length - 1">
               <i class="fas fa-chevron-right text-sm"></i>
             </button>
           </div>
@@ -248,14 +200,10 @@
           новости и приглашения на поэтические вечера
         </p>
         <form class="max-w-md mx-auto flex">
-          <input
-            type="email"
-            placeholder="Ваш email..."
-            class="flex-1 px-4 py-3 rounded-l-lg bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
-          />
+          <input type="email" placeholder="Ваш email..."
+            class="flex-1 px-4 py-3 rounded-l-lg bg-gray-800 border-gray-700 text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50" />
           <button
-            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-r-lg transition-colors duration-300"
-          >
+            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 rounded-r-lg transition-colors duration-300">
             Подписаться
           </button>
         </form>

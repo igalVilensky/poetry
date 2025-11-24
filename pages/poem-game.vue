@@ -1,21 +1,15 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center p-6"
-  >
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300 flex items-center justify-center p-6">
     <div class="relative container mx-auto max-w-4xl">
       <!-- Hero Section -->
       <div class="relative h-[40vh] rounded-2xl overflow-hidden mb-12">
-        <div
-          class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"
-        ></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-800/90 to-amber-900/90"></div>
         <div class="absolute inset-0 opacity-20 animate-pulse">
-          <div
-            class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]"
-          ></div>
+          <div class="h-full w-full bg-[radial-gradient(circle_500px_at_50%_50%,rgba(253,224,71,0.1),transparent)]">
+          </div>
         </div>
-        <div
-          class="relative h-full flex flex-col justify-center items-center text-center"
-        >
+        <div class="relative h-full flex flex-col justify-center items-center text-center">
           <h1 class="text-5xl font-serif text-white mb-4">
             <i class="fas fa-fire text-amber-300 mr-2"></i> Огонь Лирики
           </h1>
@@ -25,64 +19,52 @@
           <!-- Game progress indicator -->
           <div class="mt-6 flex items-center">
             <div class="flex space-x-2">
-              <div
-                v-for="i in 5"
-                :key="i"
-                class="w-3 h-3 rounded-full"
-                :class="currentRound > i ? 'bg-amber-300' : 'bg-slate-600/50'"
-              ></div>
+              <div v-for="i in 5" :key="i" class="w-3 h-3 rounded-full"
+                :class="currentRound > i ? 'bg-amber-300' : 'bg-slate-600/50'"></div>
             </div>
-            <span class="ml-3 text-amber-100 text-sm"
-              >{{ currentRound > 5 ? 5 : currentRound }}/5</span
-            >
+            <span class="ml-3 text-amber-100 text-sm">{{ currentRound > 5 ? 5 : currentRound }}/5</span>
           </div>
         </div>
       </div>
 
       <!-- Game Section -->
       <section
-        class="bg-white rounded-2xl border border-slate-200 p-8 shadow-lg"
-      >
+        class="bg-white dark:bg-gray-800 rounded-2xl border border-slate-200 dark:border-gray-700 p-8 shadow-lg transition-colors duration-300">
         <div v-if="loading" class="text-center py-12">
-          <div
-            class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-amber-300 border-t-amber-600"
-          ></div>
-          <p class="mt-4 text-slate-600">Загрузка...</p>
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-amber-300 border-t-amber-600">
+          </div>
+          <p class="mt-4 text-slate-600 dark:text-gray-400">Загрузка...</p>
         </div>
 
         <!-- Game Over Screen -->
         <div v-else-if="gameOver" class="text-center py-8">
           <div class="mb-6">
             <i class="fas fa-trophy text-amber-500 text-6xl mb-4"></i>
-            <h2 class="text-3xl font-serif text-slate-800 mb-2">
+            <h2 class="text-3xl font-serif text-slate-800 dark:text-white mb-2">
               {{ gameWon ? "Победа!" : "Игра окончена!" }}
             </h2>
-            <p class="text-lg text-slate-600 mb-6">
+            <p class="text-lg text-slate-600 dark:text-gray-300 mb-6">
               {{
                 gameWon
                   ? "Ты настоящий мастер лирики!"
                   : "Не переживай, в следующий раз повезёт больше."
               }}
             </p>
-            <p class="text-xl font-medium">
-              Итоговый счёт: <span class="text-amber-600">{{ score }}</span>
+            <p class="text-xl font-medium text-slate-900 dark:text-white">
+              Итоговый счёт: <span class="text-amber-600 dark:text-amber-400">{{ score }}</span>
             </p>
           </div>
 
           <div class="mt-8">
-            <button
-              @click="resetGame"
-              class="px-6 py-3 rounded-lg bg-amber-500 text-white hover:bg-amber-600 font-medium transition-all transform hover:scale-105"
-            >
+            <button @click="resetGame"
+              class="px-6 py-3 rounded-lg bg-amber-500 text-white hover:bg-amber-600 font-medium transition-all transform hover:scale-105">
               Играть снова
             </button>
 
             <div v-if="unlockedPost" class="mt-6">
-              <p class="text-slate-700 mb-4">Ты разблокировал стихотворение!</p>
-              <nuxt-link
-                :to="`/poems/${unlockedPost.slug.current}`"
-                class="inline-block px-6 py-3 rounded-lg bg-slate-800 text-white hover:bg-slate-900 font-medium transition-all"
-              >
+              <p class="text-slate-700 dark:text-gray-300 mb-4">Ты разблокировал стихотворение!</p>
+              <nuxt-link :to="`/poems/${unlockedPost.slug.current}`"
+                class="inline-block px-6 py-3 rounded-lg bg-slate-800 text-white hover:bg-slate-900 font-medium transition-all">
                 <i class="fas fa-book-open mr-2"></i> Читать полностью
               </nuxt-link>
             </div>
@@ -91,14 +73,10 @@
 
         <!-- Active Game -->
         <div v-else-if="currentLyric">
-          <div class="mb-4 flex justify-between text-slate-600">
+          <div class="mb-4 flex justify-between text-slate-600 dark:text-gray-400">
             <p class="flex items-center">
               <i class="fas fa-stopwatch text-amber-500 mr-2"></i>
-              <span
-                class="font-medium"
-                :class="timer <= 3 ? 'text-red-500' : ''"
-                >{{ timer }} сек</span
-              >
+              <span class="font-medium" :class="timer <= 3 ? 'text-red-500' : ''">{{ timer }} сек</span>
             </p>
             <p class="flex items-center">
               <i class="fas fa-star text-amber-500 mr-2"></i>
@@ -106,51 +84,33 @@
             </p>
           </div>
 
-          <div class="py-6 border-t border-b border-slate-100 mb-6">
-            <p
-              class="text-2xl font-serif text-slate-800 mb-6 text-center italic"
-            >
+          <div class="py-6 border-t border-b border-slate-100 dark:border-gray-700 mb-6">
+            <p class="text-2xl font-serif text-slate-800 dark:text-white mb-6 text-center italic">
               "{{ currentLyric.line }}"
             </p>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button
-                v-for="option in currentLyric.options"
-                :key="option.text"
-                @click="checkAnswer(option.text)"
-                class="flex items-center justify-center px-4 py-3 rounded-lg bg-amber-100 hover:bg-amber-200 text-slate-800 font-medium transition-all duration-300 transform hover:scale-105"
-                :class="{ 'animate-pulse': timer < 3 }"
-              >
+              <button v-for="option in currentLyric.options" :key="option.text" @click="checkAnswer(option.text)"
+                class="flex items-center justify-center px-4 py-3 rounded-lg bg-amber-100 dark:bg-amber-900/30 hover:bg-amber-200 dark:hover:bg-amber-800/40 text-slate-800 dark:text-white font-medium transition-all duration-300 transform hover:scale-105"
+                :class="{ 'animate-pulse': timer < 3 }">
                 <i :class="option.icon" class="mr-2"></i>
                 {{ option.text }}
               </button>
             </div>
           </div>
 
-          <div
-            v-if="feedback"
-            class="flex items-center justify-center mb-6 p-3 rounded-lg"
-            :class="feedback.isCorrect ? 'bg-green-100' : 'bg-red-100'"
-          >
-            <div
-              :class="
-                feedback.isCorrect
-                  ? 'text-green-600 animate-inferno'
-                  : 'text-red-600'
-              "
-              class="flex items-center text-lg"
-            >
+          <div v-if="feedback" class="flex items-center justify-center mb-6 p-3 rounded-lg"
+            :class="feedback.isCorrect ? 'bg-green-100 dark:bg-green-900/30' : 'bg-red-100 dark:bg-red-900/30'">
+            <div :class="feedback.isCorrect
+                ? 'text-green-600 dark:text-green-400 animate-inferno'
+                : 'text-red-600 dark:text-red-400'
+              " class="flex items-center text-lg">
               <i :class="feedback.icon" class="mr-2"></i>
               {{ feedback.message }}
             </div>
           </div>
 
-          <audio
-            v-if="audioSrc"
-            :src="audioSrc"
-            ref="audioPlayer"
-            class="hidden"
-          ></audio>
+          <audio v-if="audioSrc" :src="audioSrc" ref="audioPlayer" class="hidden"></audio>
         </div>
 
         <div v-else class="text-center py-8 text-red-600">
@@ -162,9 +122,10 @@
       </section>
 
       <!-- Game Rules Section -->
-      <section class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
-        <h3 class="text-lg font-medium text-slate-800 mb-2">Как играть:</h3>
-        <ul class="text-slate-600 text-sm">
+      <section
+        class="mt-6 p-4 bg-slate-50 dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 transition-colors duration-300">
+        <h3 class="text-lg font-medium text-slate-800 dark:text-white mb-2">Как играть:</h3>
+        <ul class="text-slate-600 dark:text-gray-300 text-sm">
           <li class="flex items-start mb-1">
             <i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i>
             <span>Угадай пропущенное слово в поэтической строке</span>
@@ -175,9 +136,7 @@
           </li>
           <li class="flex items-start">
             <i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i>
-            <span
-              >Пройди 5 раундов, чтобы разблокировать полное стихотворение</span
-            >
+            <span>Пройди 5 раундов, чтобы разблокировать полное стихотворение</span>
           </li>
         </ul>
       </section>
@@ -295,10 +254,10 @@ const generateGameRound = (posts) => {
     const distractors = [
       targetWord.slice(0, -1) + (targetWord.slice(-1) === "а" ? "у" : "ы"), // Similar word
       ["солнце", "тостер", "ветер", "время", "космос", "город", "кошка"][
-        Math.floor(Math.random() * 7)
+      Math.floor(Math.random() * 7)
       ], // Common word
       ["сердце", "искра", "пламя", "душа", "волна", "страсть"][
-        Math.floor(Math.random() * 6)
+      Math.floor(Math.random() * 6)
       ], // Poetic word
     ];
 
@@ -317,9 +276,8 @@ const generateGameRound = (posts) => {
       { text: targetWord, icon: `${shuffledIcons[0]} text-amber-500` },
       ...distractors.map((text, index) => ({
         text,
-        icon: `${shuffledIcons[index + 1]} text-${
-          index === 0 ? "yellow" : index === 1 ? "blue" : "amber"
-        }-500`,
+        icon: `${shuffledIcons[index + 1]} text-${index === 0 ? "yellow" : index === 1 ? "blue" : "amber"
+          }-500`,
       })),
     ].sort(() => Math.random() - 0.5); // Shuffle
 
@@ -495,17 +453,20 @@ onUnmounted(() => clearInterval(interval));
     opacity: 1;
     filter: brightness(1);
   }
+
   50% {
     transform: scale(1.4);
     opacity: 0.8;
     filter: brightness(1.5);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
     filter: brightness(1);
   }
 }
+
 .animate-inferno {
   animation: inferno 0.6s ease-out;
 }

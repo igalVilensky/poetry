@@ -2,8 +2,10 @@
   <NuxtLayout />
 </template>
 
-<script>
-export default {
-  name: "App",
-};
+<script setup>
+const { initTheme } = useTheme();
+
+onMounted(() => {
+  initTheme();
+});
 </script>

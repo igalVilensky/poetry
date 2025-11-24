@@ -1,12 +1,12 @@
 <template>
   <footer
-    class="bg-gradient-to-b from-gray-900 to-gray-900/95 text-white border-t border-amber-800/20"
+    class="bg-slate-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-900/95 text-slate-900 dark:text-white border-t border-amber-500/10 dark:border-amber-800/20 transition-colors duration-300"
   >
     <div class="container mx-auto px-6 py-12">
       <!-- Decorative Separator -->
       <div class="flex items-center justify-center mb-12">
         <div class="h-px w-16 bg-amber-500/30"></div>
-        <i class="fas fa-feather-alt mx-4 text-amber-500/50"></i>
+        <i class="fas fa-feather-alt mx-4 text-amber-600/50 dark:text-amber-500/50"></i>
         <div class="h-px w-16 bg-amber-500/30"></div>
       </div>
 
@@ -14,24 +14,24 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <!-- About Section -->
         <div class="space-y-4">
-          <h3 class="text-xl font-serif font-medium text-amber-400">О нас</h3>
-          <p class="text-gray-300 leading-relaxed">
+          <h3 class="text-xl font-serif font-medium text-amber-600 dark:text-amber-400">О нас</h3>
+          <p class="text-slate-600 dark:text-gray-300 leading-relaxed">
             Добро пожаловать на сайт Солнечные сказки — место, где поэзия
             оживает и вдохновляет на новые идеи.
           </p>
           <!-- Newsletter Signup -->
           <div class="pt-4">
-            <h4 class="text-sm font-medium text-amber-400 mb-2">
+            <h4 class="text-sm font-medium text-amber-600 dark:text-amber-400 mb-2">
               Подпишитесь на нашу рассылку
             </h4>
             <div class="flex">
               <input
                 type="email"
                 placeholder="Ваш email..."
-                class="bg-gray-800/50 text-sm rounded-l-lg px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+                class="bg-white dark:bg-gray-800/50 text-slate-900 dark:text-white text-sm rounded-l-lg px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-amber-500/50 border border-slate-200 dark:border-transparent"
               />
               <button
-                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 px-4 rounded-r-lg transition-colors duration-300 cursor-pointer"
+                class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 px-4 rounded-r-lg transition-colors duration-300 cursor-pointer border-t border-b border-r border-amber-500/20 dark:border-transparent"
               >
                 <i class="fas fa-paper-plane"></i>
               </button>
@@ -41,14 +41,14 @@
 
         <!-- Quick Links Section -->
         <div class="space-y-4">
-          <h3 class="text-xl font-serif font-medium text-amber-400">
+          <h3 class="text-xl font-serif font-medium text-amber-600 dark:text-amber-400">
             Навигация
           </h3>
           <ul class="space-y-2">
             <li v-for="link in quickLinks" :key="link.href">
               <NuxtLink
                 :to="link.href"
-                class="text-gray-300 hover:text-amber-400 transition-colors duration-300 flex items-center group cursor-pointer"
+                class="text-slate-600 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 flex items-center group cursor-pointer"
               >
                 <span
                   class="w-1.5 h-1.5 bg-amber-500/50 rounded-full mr-2 transform scale-0 group-hover:scale-100 transition-transform duration-300"
@@ -61,7 +61,7 @@
 
         <!-- Recent Poems Section -->
         <div class="space-y-4">
-          <h3 class="text-xl font-serif font-medium text-amber-400">
+          <h3 class="text-xl font-serif font-medium text-amber-600 dark:text-amber-400">
             Новые стихи
           </h3>
           <ul class="space-y-3">
@@ -71,11 +71,11 @@
                 class="group cursor-pointer"
               >
                 <p
-                  class="text-gray-300 group-hover:text-amber-400 transition-colors duration-300"
+                  class="text-slate-600 dark:text-gray-300 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors duration-300"
                 >
                   {{ poem.title }}
                 </p>
-                <p class="text-sm text-gray-400">
+                <p class="text-sm text-slate-500 dark:text-gray-400">
                   {{ poem.date }}
                 </p>
               </NuxtLink>
@@ -85,15 +85,15 @@
 
         <!-- Contact & Social Section -->
         <div class="space-y-4">
-          <h3 class="text-xl font-serif font-medium text-amber-400">
+          <h3 class="text-xl font-serif font-medium text-amber-600 dark:text-amber-400">
             Контакты
           </h3>
-          <div class="space-y-2 text-gray-300">
+          <div class="space-y-2 text-slate-600 dark:text-gray-300">
             <p class="flex items-center">
-              <i class="fas fa-envelope w-5 text-amber-500/50"></i>
+              <i class="fas fa-envelope w-5 text-amber-600/50 dark:text-amber-500/50"></i>
               <a
                 href="mailto:belaveda.keren@gmail.com"
-                class="ml-2 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
+                class="ml-2 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 cursor-pointer"
               >
                 belaveda.keren@gmail.com
               </a>
@@ -111,7 +111,7 @@
 
           <!-- Social Media Links -->
           <div class="pt-4">
-            <h4 class="text-sm font-medium text-amber-400 mb-3">
+            <h4 class="text-sm font-medium text-amber-600 dark:text-amber-400 mb-3">
               Следите за нами
             </h4>
             <div class="flex space-x-4">
@@ -120,7 +120,7 @@
                 :key="social.platform"
                 :href="social.url"
                 :aria-label="social.platform"
-                class="w-10 h-10 rounded-full bg-gray-800/50 flex items-center justify-center hover:bg-amber-500/20 text-gray-300 hover:text-amber-400 transition-all duration-300 cursor-pointer"
+                class="w-10 h-10 rounded-full bg-white dark:bg-gray-800/50 flex items-center justify-center hover:bg-amber-500/20 text-slate-600 dark:text-gray-300 hover:text-amber-600 dark:hover:text-amber-400 transition-all duration-300 cursor-pointer border border-slate-200 dark:border-transparent"
               >
                 <i :class="social.icon"></i>
               </a>
@@ -130,11 +130,11 @@
       </div>
 
       <!-- Footer Bottom -->
-      <div class="pt-8 border-t border-gray-800">
+      <div class="pt-8 border-t border-slate-200 dark:border-gray-800">
         <div
           class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
         >
-          <p class="text-gray-400 text-sm">
+          <p class="text-slate-500 dark:text-gray-400 text-sm">
             &copy; {{ new Date().getFullYear() }} Солнечные сказки. Все права
             защищены.
           </p>
@@ -142,13 +142,13 @@
           <div class="flex space-x-6 text-sm">
             <NuxtLink
               to="/privacy"
-              class="text-gray-400 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
+              class="text-slate-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 cursor-pointer"
             >
               Конфиденциальность
             </NuxtLink>
             <NuxtLink
               to="/terms"
-              class="text-gray-400 hover:text-amber-400 transition-colors duration-300 cursor-pointer"
+              class="text-slate-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-300 cursor-pointer"
             >
               Условия использования
             </NuxtLink>

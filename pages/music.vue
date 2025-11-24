@@ -1,22 +1,14 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50"
-  >
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 transition-colors duration-300">
     <!-- Hero Section -->
     <div class="relative h-[40vh] sm:h-[50vh] overflow-hidden">
       <!-- Dynamic Background Image -->
-      <div
-        v-if="authorBackground"
-        class="absolute inset-0 bg-cover bg-center"
-        :style="{ backgroundImage: `url(${authorBackground})` }"
-      ></div>
-      <div
-        class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"
-      ></div>
+      <div v-if="authorBackground" class="absolute inset-0 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${authorBackground})` }"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-900/50 via-slate-800/70 to-amber-900/50"></div>
 
-      <div
-        class="relative h-full container mx-auto px-6 flex items-center justify-center"
-      >
+      <div class="relative h-full container mx-auto px-6 flex items-center justify-center">
         <h1 class="text-4xl md:text-6xl font-serif text-white text-center">
           Музыкальная коллекция
         </h1>
@@ -26,43 +18,30 @@
     <!-- Music List Section -->
     <section class="py-16 md:py-24">
       <div class="container mx-auto px-6">
-        <h2
-          class="text-3xl md:text-4xl font-serif text-slate-900 mb-12 text-center"
-        >
+        <h2 class="text-3xl md:text-4xl font-serif text-slate-900 dark:text-white mb-12 text-center">
           Все треки
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div
-            v-for="track in tracks"
-            :key="track._id"
-            class="bg-white rounded-xl border border-slate-200 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-          >
+          <div v-for="track in tracks" :key="track._id"
+            class="bg-white dark:bg-gray-800 rounded-xl border border-slate-200 dark:border-gray-700 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <!-- Track Cover Image -->
             <div v-if="track.coverImage" class="h-48 overflow-hidden">
-              <img
-                :src="track.coverImage"
-                :alt="track.title"
-                class="w-full h-full object-cover"
-              />
+              <img :src="track.coverImage" :alt="track.title" class="w-full h-full object-cover" />
             </div>
             <div class="p-6">
-              <h3 class="text-xl font-serif text-slate-900 mb-3">
+              <h3 class="text-xl font-serif text-slate-900 dark:text-white mb-3">
                 {{ track.title }}
               </h3>
-              <p class="text-slate-600 mb-4 line-clamp-3">
+              <p class="text-slate-600 dark:text-gray-300 mb-4 line-clamp-3">
                 {{ track.description }}
               </p>
               <div class="flex gap-4">
-                <button
-                  @click="playTrack(track)"
-                  class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors"
-                >
+                <button @click="playTrack(track)"
+                  class="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors">
                   <i class="fas fa-play"></i>
                 </button>
-                <button
-                  @click="downloadTrack(track)"
-                  class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 text-slate-700 hover:bg-slate-300 transition-colors"
-                >
+                <button @click="downloadTrack(track)"
+                  class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-200 dark:bg-gray-700 text-slate-700 dark:text-gray-300 hover:bg-slate-300 dark:hover:bg-gray-600 transition-colors">
                   <i class="fas fa-download"></i>
                 </button>
               </div>
@@ -73,70 +52,46 @@
     </section>
 
     <!-- Enhanced Audio Player -->
-    <div
-      v-if="currentTrack"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-lg z-50"
-    >
+    <div v-if="currentTrack"
+      class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-slate-200 dark:border-gray-700 shadow-lg z-50 transition-colors duration-300">
       <div class="container mx-auto px-4 py-3 md:py-4">
         <!-- Mobile Layout -->
         <div class="md:hidden">
           <div class="flex items-center justify-between mb-3">
             <div class="flex-1 min-w-0 mr-4">
-              <h3 class="text-base font-medium text-slate-900 truncate">
+              <h3 class="text-base font-medium text-slate-900 dark:text-white truncate">
                 {{ currentTrack.title }}
               </h3>
             </div>
-            <button
-              @click="closePlayer"
-              class="flex-shrink-0 text-slate-500 hover:text-slate-700"
-            >
+            <button @click="closePlayer"
+              class="flex-shrink-0 text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-200">
               <i class="fas fa-times"></i>
             </button>
           </div>
           <!-- Progress Bar -->
-          <div
-            class="w-full bg-slate-200 rounded-full h-1 mb-3 cursor-pointer"
-            @click="seek"
-            ref="progressBar"
-          >
-            <div
-              class="bg-amber-500 h-1 rounded-full"
-              :style="{ width: `${progress}%` }"
-            ></div>
+          <div class="w-full bg-slate-200 rounded-full h-1 mb-3 cursor-pointer" @click="seek" ref="progressBar">
+            <div class="bg-amber-500 h-1 rounded-full" :style="{ width: `${progress}%` }"></div>
           </div>
           <!-- Controls -->
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-              <button
-                @click="togglePlay"
-                class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors"
-              >
+              <button @click="togglePlay"
+                class="w-10 h-10 flex items-center justify-center rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors">
                 <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
               </button>
               <div class="flex flex-col text-xs">
                 <span class="text-slate-600">{{
                   formatTime(currentTime)
-                }}</span>
+                  }}</span>
                 <span class="text-slate-400">{{ formatTime(duration) }}</span>
               </div>
             </div>
             <div class="flex items-center space-x-3">
-              <button
-                @click="toggleMute"
-                class="text-slate-500 hover:text-slate-700"
-              >
-                <i
-                  :class="isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up'"
-                ></i>
+              <button @click="toggleMute" class="text-slate-500 hover:text-slate-700">
+                <i :class="isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up'"></i>
               </button>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                v-model="volume"
-                @input="updateVolume"
-                class="w-20 accent-amber-500"
-              />
+              <input type="range" min="0" max="100" v-model="volume" @input="updateVolume"
+                class="w-20 accent-amber-500" />
             </div>
           </div>
         </div>
@@ -147,11 +102,8 @@
             <!-- Track Info -->
             <div class="flex items-center flex-1 min-w-0">
               <div v-if="currentTrack.coverImage" class="w-12 h-12 mr-4">
-                <img
-                  :src="currentTrack.coverImage"
-                  :alt="currentTrack.title"
-                  class="w-full h-full object-cover rounded"
-                />
+                <img :src="currentTrack.coverImage" :alt="currentTrack.title"
+                  class="w-full h-full object-cover rounded" />
               </div>
               <div class="flex-1 min-w-0">
                 <h3 class="text-lg font-medium text-slate-900 truncate">
@@ -167,70 +119,42 @@
             <div class="flex-1 max-w-2xl">
               <div class="flex flex-col">
                 <div class="flex items-center justify-center space-x-6 mb-2">
-                  <button
-                    @click="playPreviousTrack"
-                    class="text-slate-500 hover:text-slate-700 transition-colors"
-                  >
+                  <button @click="playPreviousTrack" class="text-slate-500 hover:text-slate-700 transition-colors">
                     <i class="fas fa-step-backward"></i>
                   </button>
-                  <button
-                    @click="togglePlay"
-                    class="w-12 h-12 flex items-center justify-center rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors"
-                  >
+                  <button @click="togglePlay"
+                    class="w-12 h-12 flex items-center justify-center rounded-full bg-amber-500 text-white hover:bg-amber-600 transition-colors">
                     <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
                   </button>
-                  <button
-                    @click="playNextTrack"
-                    class="text-slate-500 hover:text-slate-700 transition-colors"
-                  >
+                  <button @click="playNextTrack" class="text-slate-500 hover:text-slate-700 transition-colors">
                     <i class="fas fa-step-forward"></i>
                   </button>
                 </div>
                 <div class="flex items-center space-x-3">
                   <span class="text-sm text-slate-500">{{
                     formatTime(currentTime)
-                  }}</span>
+                    }}</span>
                   <div class="flex-1 relative">
-                    <div
-                      class="w-full bg-slate-200 rounded-full h-1 cursor-pointer"
-                      @click="seek"
-                      ref="progressBar"
-                    >
-                      <div
-                        class="absolute top-0 left-0 h-1 bg-amber-500 rounded-full"
-                        :style="{ width: `${progress}%` }"
-                      ></div>
+                    <div class="w-full bg-slate-200 rounded-full h-1 cursor-pointer" @click="seek" ref="progressBar">
+                      <div class="absolute top-0 left-0 h-1 bg-amber-500 rounded-full"
+                        :style="{ width: `${progress}%` }"></div>
                     </div>
                   </div>
                   <span class="text-sm text-slate-500">{{
                     formatTime(duration)
-                  }}</span>
+                    }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Volume Controls -->
             <div class="flex items-center space-x-4">
-              <button
-                @click="toggleMute"
-                class="text-slate-500 hover:text-slate-700"
-              >
-                <i
-                  :class="isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up'"
-                ></i>
+              <button @click="toggleMute" class="text-slate-500 hover:text-slate-700">
+                <i :class="isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up'"></i>
               </button>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                v-model="volume"
-                @input="updateVolume"
-                class="w-24 accent-amber-500"
-              />
-              <button
-                @click="closePlayer"
-                class="ml-4 text-slate-500 hover:text-slate-700"
-              >
+              <input type="range" min="0" max="100" v-model="volume" @input="updateVolume"
+                class="w-24 accent-amber-500" />
+              <button @click="closePlayer" class="ml-4 text-slate-500 hover:text-slate-700">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -238,13 +162,8 @@
         </div>
 
         <!-- Hidden Audio Element -->
-        <audio
-          ref="audioPlayer"
-          :src="currentTrackUrl"
-          @timeupdate="onTimeUpdate"
-          @loadedmetadata="onLoadedMetadata"
-          @ended="onEnded"
-        ></audio>
+        <audio ref="audioPlayer" :src="currentTrackUrl" @timeupdate="onTimeUpdate" @loadedmetadata="onLoadedMetadata"
+          @ended="onEnded"></audio>
       </div>
     </div>
   </div>
@@ -550,9 +469,11 @@ input[type="range"]::-moz-range-thumb:hover {
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(0.95);
   }
+
   100% {
     transform: scale(1);
   }
