@@ -183,7 +183,6 @@ const quickLinks = [
   { text: "Главная", href: "/" },
   { text: "Стихи", href: "/poems" },
   { text: "Музыка", href: "/music" },
-  { text: "Автор", href: "/author" },
 ];
 
 const socialLinks = [
