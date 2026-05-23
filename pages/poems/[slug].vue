@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isReadingRoom"
     class="min-h-screen bg-gradient-to-b from-slate-100 to-slate-50 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
 
     <!-- Hero Section with Dynamic Parallax -->
@@ -14,13 +15,20 @@
 
       <!-- Content -->
       <div class="relative container mx-auto px-6 h-full flex flex-col justify-center">
-        <nuxt-link to="/poems"
-          class="group inline-flex items-center text-amber-100 mb-8 hover:text-amber-200 transition-all w-fit">
-          <div class="flex items-center space-x-2 relative">
-            <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
-            <span class="text-sm font-medium">Вернуться к списку</span>
-          </div>
-        </nuxt-link>
+        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <nuxt-link to="/poems"
+            class="group inline-flex items-center text-amber-100 hover:text-amber-200 transition-all w-fit">
+            <div class="flex items-center space-x-2 relative">
+              <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
+              <span class="text-sm font-medium">Вернуться к списку</span>
+            </div>
+          </nuxt-link>
+
+          <button @click="toggleReadingRoom"
+            class="rounded-full border border-amber-200/50 bg-white/10 px-4 py-2 text-sm font-medium text-amber-50 backdrop-blur-sm transition-colors hover:bg-amber-100/20 focus:ring-2 focus:ring-amber-300">
+            {{ isReadingRoom ? "Выйти из режима чтения" : "Войти в режим чтения" }}
+          </button>
+        </div>
 
         <div class="space-y-6">
           <h1 class="text-5xl md:text-6xl font-serif text-white leading-tight max-w-4xl"
@@ -185,6 +193,156 @@
       </div>
     </main>
   </div>
+
+  <div v-else
+    class="min-h-screen bg-stone-50 text-stone-900 transition-colors duration-300 dark:bg-stone-950 dark:text-stone-100">
+    <div class="mx-auto max-w-5xl px-6 py-6">
+      <div
+        class="flex flex-wrap items-center justify-between gap-4 border-b border-stone-200/80 pb-4 dark:border-stone-800">
+        <nuxt-link to="/poems"
+          class="group inline-flex items-center space-x-2 text-sm font-medium text-stone-600 transition-colors hover:text-amber-700 dark:text-stone-300 dark:hover:text-amber-300">
+          <i class="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1"></i>
+          <span>Вернуться к списку</span>
+        </nuxt-link>
+
+        <button @click="toggleReadingRoom"
+          class="rounded-full border border-stone-300 bg-stone-100 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800 focus:ring-2 focus:ring-amber-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-amber-700 dark:hover:bg-stone-800 dark:hover:text-amber-200">
+          {{ isReadingRoom ? "Выйти из режима чтения" : "Войти в режим чтения" }}
+        </button>
+      </div>
+    </div>
+
+    <main class="mx-auto max-w-[760px] px-6 pb-20 pt-10 md:pt-16">
+      <header class="mb-12 text-center">
+        <div
+          class="mb-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs uppercase tracking-[0.18em] text-stone-500 dark:text-stone-400">
+          <span v-if="post?.category">{{ post.category }}</span>
+          <span v-if="post?.category && post?.publishedAt" class="text-amber-700/60 dark:text-amber-300/60">•</span>
+          <time v-if="post?.publishedAt" :datetime="post?.publishedAt">
+            {{ formatDate(post?.publishedAt) }}
+          </time>
+        </div>
+
+        <h1 class="font-serif text-4xl leading-tight text-stone-950 dark:text-stone-50 md:text-5xl">
+          {{ post?.title }}
+        </h1>
+
+        <p v-if="post?.author" class="mt-5 text-base text-stone-600 dark:text-stone-300">
+          {{ post.author }}
+        </p>
+
+        <div class="mx-auto mt-8 h-px w-24 bg-amber-700/30 dark:bg-amber-300/30"></div>
+      </header>
+
+      <article
+        class="mx-auto max-w-[700px] border border-stone-200/80 bg-white/70 px-6 py-10 dark:border-stone-800 dark:bg-stone-900/60 sm:px-10 md:px-12">
+        <div
+          class="font-serif text-lg leading-loose text-stone-800 dark:text-stone-100 md:text-xl md:leading-loose">
+          <div v-if="post?.body" v-for="(block, index) in post.body" :key="`reading-${index}`"
+            class="whitespace-pre-wrap" v-html="formatPoem(block.children?.[0]?.text || '')"></div>
+          <p v-else class="text-center text-base text-stone-500 dark:text-stone-400">
+            Загрузка стихотворения...
+          </p>
+        </div>
+      </article>
+
+      <section
+        class="mx-auto mt-8 flex max-w-[700px] flex-wrap items-center justify-between gap-4 border-b border-stone-200 pb-8 dark:border-stone-800">
+        <div class="flex items-center gap-3">
+          <button
+            class="inline-flex items-center space-x-2 rounded-full border border-stone-300 px-4 py-2 text-sm text-stone-700 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800 focus:ring-2 focus:ring-amber-400 dark:border-stone-700 dark:text-stone-200 dark:hover:border-amber-700 dark:hover:bg-stone-800 dark:hover:text-amber-200"
+            @click="toggleLike">
+            <i class="far fa-heart" :class="{ fas: isLiked }"></i>
+            <span>{{ likeCount }}</span>
+          </button>
+
+          <span
+            class="inline-flex items-center space-x-2 rounded-full border border-stone-200 px-4 py-2 text-sm text-stone-500 dark:border-stone-800 dark:text-stone-400">
+            <i class="far fa-comment"></i>
+            <span>{{ comments.length }}</span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            class="rounded-full border border-transparent p-2.5 text-stone-500 transition-colors hover:border-stone-300 hover:bg-stone-100 hover:text-amber-800 focus:ring-2 focus:ring-amber-400 dark:text-stone-400 dark:hover:border-stone-700 dark:hover:bg-stone-800 dark:hover:text-amber-200"
+            @click="toggleBookmark">
+            <i class="far fa-bookmark" :class="{ fas: isBookmarked }"></i>
+          </button>
+
+          <div class="relative">
+            <button
+              class="rounded-full border border-transparent p-2.5 text-stone-500 transition-colors hover:border-stone-300 hover:bg-stone-100 hover:text-amber-800 focus:ring-2 focus:ring-amber-400 dark:text-stone-400 dark:hover:border-stone-700 dark:hover:bg-stone-800 dark:hover:text-amber-200"
+              @click="toggleShare">
+              <i class="fas fa-share-alt"></i>
+            </button>
+
+            <div v-if="isShareOpen" v-click-outside="closeShare"
+              class="absolute right-0 z-10 mt-2 w-48 border border-stone-200 bg-stone-50 py-2 shadow-sm dark:border-stone-700 dark:bg-stone-900">
+              <button v-for="platform in sharePlatforms" :key="`reading-${platform.name}`"
+                @click="shareOn(platform.name)"
+                class="flex w-full items-center space-x-3 px-4 py-2 text-left text-sm text-stone-700 transition-colors hover:bg-amber-50 hover:text-amber-800 dark:text-stone-200 dark:hover:bg-stone-800 dark:hover:text-amber-200">
+                <i :class="platform.icon"></i>
+                <span>{{ platform.label }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-auto mt-10 max-w-[700px]">
+        <button @click="showReadingRoomComments = !showReadingRoomComments"
+          class="w-full border border-stone-300 bg-transparent px-4 py-3 text-sm font-medium text-stone-700 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800 focus:ring-2 focus:ring-amber-400 dark:border-stone-700 dark:text-stone-200 dark:hover:border-amber-700 dark:hover:bg-stone-800 dark:hover:text-amber-200">
+          {{ showReadingRoomComments ? "Скрыть заметки читателей" : "Показать заметки читателей" }}
+        </button>
+
+        <div v-if="showReadingRoomComments" class="mt-8 space-y-8">
+          <div>
+            <textarea v-model="newComment" placeholder="Поделитесь своими мыслями..."
+              class="w-full resize-none border border-stone-300 bg-white/70 px-4 py-3 text-stone-900 placeholder-stone-400 transition-colors focus:border-transparent focus:ring-2 focus:ring-amber-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:placeholder-stone-500"
+              rows="3"></textarea>
+            <div class="mt-3 flex justify-end">
+              <button @click="submitComment"
+                class="border border-amber-500 bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700 focus:ring-2 focus:ring-amber-400 disabled:cursor-not-allowed disabled:border-stone-300 disabled:bg-stone-200 disabled:text-stone-500 dark:disabled:border-stone-700 dark:disabled:bg-stone-800 dark:disabled:text-stone-500"
+                :disabled="!newComment.trim()">
+                Отправить
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-5">
+            <div v-for="comment in comments" :key="`reading-comment-${comment.id}`"
+              class="border-t border-stone-200 pt-5 dark:border-stone-800">
+              <div class="flex items-start justify-between gap-4">
+                <h4 class="font-medium text-stone-900 dark:text-stone-100">
+                  {{ comment.author }}
+                </h4>
+                <span class="text-xs text-stone-500 dark:text-stone-400">
+                  {{ formatCommentDate(comment.date) }}
+                </span>
+              </div>
+              <p class="mt-3 leading-relaxed text-stone-700 dark:text-stone-300">
+                {{ comment.content }}
+              </p>
+              <div class="mt-3 flex items-center space-x-4">
+                <button @click="toggleCommentLike(comment.id)"
+                  class="text-sm text-stone-500 transition-colors hover:text-amber-700 focus:ring-2 focus:ring-amber-400 dark:text-stone-400 dark:hover:text-amber-300"
+                  :class="{ 'text-amber-700 dark:text-amber-300': comment.isLiked }">
+                  <i class="far fa-heart" :class="{ fas: comment.isLiked }"></i>
+                  <span class="ml-1">{{ comment.likes }}</span>
+                </button>
+                <button @click="replyToComment(comment.id)"
+                  class="text-sm text-stone-500 transition-colors hover:text-amber-700 focus:ring-2 focus:ring-amber-400 dark:text-stone-400 dark:hover:text-amber-300">
+                  <i class="fas fa-reply"></i>
+                  <span class="ml-1">Ответить</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -226,9 +384,12 @@ useHead({
 const heroSection = ref<HTMLElement | null>(null);
 const isShareOpen = ref(false);
 const isBookmarked = ref(false);
+const isReadingRoom = ref(false);
+const showReadingRoomComments = ref(false);
 const readingProgress = ref(0);
 const parallaxX = ref(0);
 const parallaxY = ref(0);
+const READING_ROOM_STORAGE_KEY = "poemReadingRoom";
 
 // Share platforms configuration
 const sharePlatforms = [
@@ -266,6 +427,7 @@ onMounted(() => {
   if (process.client) {
     sessionId.value = localStorage.getItem("sessionId") || uuidv4();
     localStorage.setItem("sessionId", sessionId.value);
+    isReadingRoom.value = localStorage.getItem(READING_ROOM_STORAGE_KEY) === "true";
   }
 
   // Simulate fetching user data
@@ -325,6 +487,19 @@ const toggleShare = () => {
 
 const closeShare = () => {
   isShareOpen.value = false;
+};
+
+const toggleReadingRoom = () => {
+  isReadingRoom.value = !isReadingRoom.value;
+  isShareOpen.value = false;
+
+  if (isReadingRoom.value) {
+    showReadingRoomComments.value = false;
+  }
+
+  if (process.client) {
+    localStorage.setItem(READING_ROOM_STORAGE_KEY, String(isReadingRoom.value));
+  }
 };
 
 const toggleBookmark = () => {
