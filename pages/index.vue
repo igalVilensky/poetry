@@ -241,14 +241,14 @@
           Подпишитесь на нашу рассылку, чтобы получать новые стихи, литературные
           новости и приглашения на поэтические вечера
         </p>
-        <form class="max-w-md mx-auto flex">
+        <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-3 sm:gap-0">
           <input
             type="email"
             placeholder="Ваш email..."
-            class="flex-1 px-4 py-3 rounded-l-lg bg-slate-100 dark:bg-gray-800 border-slate-200 dark:border-gray-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
+            class="w-full sm:flex-1 min-w-0 px-4 py-3 rounded-lg sm:rounded-r-none sm:rounded-l-lg bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-amber-500/50"
           />
           <button
-            class="px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 rounded-r-lg transition-colors duration-300"
+            class="w-full sm:w-auto px-6 py-3 bg-amber-500/20 hover:bg-amber-500/30 text-amber-600 dark:text-amber-400 rounded-lg sm:rounded-l-none sm:rounded-r-lg transition-colors duration-300"
           >
             Подписаться
           </button>
