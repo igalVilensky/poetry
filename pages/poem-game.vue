@@ -9,11 +9,11 @@
           Чуткое чтение
         </h1>
         <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-stone-600 dark:text-stone-300 md:text-lg">
-          Прислушайтесь к строкам и выберите настроение, которое звучит в них сильнее всего.
+          Прислушайтесь к строкам и выберите ответ, который ближе всего к фрагменту.
         </p>
         <div v-if="!gameOver" class="mt-7 flex flex-col items-center gap-3">
           <p class="text-sm text-stone-500 dark:text-stone-400">
-            Строка {{ currentRound }} из {{ maxRounds }}
+            Раунд {{ currentRound }} из {{ maxRounds }}
           </p>
           <div class="flex gap-2" aria-hidden="true">
             <span v-for="round in maxRounds" :key="round" class="h-1.5 w-10 rounded-full transition-colors"
@@ -59,6 +59,10 @@
             {{ aiError }}
           </p>
 
+          <p class="mb-5 text-center text-sm uppercase text-amber-700 dark:text-amber-300">
+            Раунд {{ currentRound }} из {{ maxRounds }} · {{ currentGameRound.roundLabel }}
+          </p>
+
           <blockquote
             class="whitespace-pre-line border-y border-stone-200 py-8 text-center font-serif text-2xl italic leading-10 text-stone-900 dark:border-stone-800 dark:text-stone-100 md:text-3xl md:leading-[3.2rem]">
             {{ currentGameRound.excerpt }}
@@ -69,9 +73,9 @@
               {{ currentGameRound.question }}
             </h2>
             <div class="mt-7 grid gap-3 sm:grid-cols-2">
-              <button v-for="option in currentGameRound.options" :key="option" type="button" @click="selectMood(option)"
+              <button v-for="option in currentGameRound.options" :key="option" type="button" @click="selectAnswer(option)"
                 class="rounded-xl border p-5 text-left font-medium transition-colors disabled:cursor-default"
-                :disabled="!!selectedMood"
+                :disabled="!!selectedAnswer"
                 :class="getOptionClass(option)">
                 {{ option }}
               </button>
@@ -87,9 +91,6 @@
             </p>
             <p class="mt-2 leading-7 text-stone-600 dark:text-stone-300">
               {{ feedback.explanation }}
-            </p>
-            <p v-if="!feedback.isCorrect" class="mt-3 text-sm text-stone-500 dark:text-stone-400">
-              Ближе всего: {{ currentGameRound.correctMood }}
             </p>
             <button type="button" @click="goToNextRound"
               class="mt-6 inline-flex items-center justify-center rounded-full bg-stone-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-stone-800 dark:bg-amber-100 dark:text-stone-950 dark:hover:bg-amber-50">
@@ -121,7 +122,7 @@ const maxRounds = 5;
 const currentRound = ref(1);
 const score = ref(0);
 const currentGameRound = ref(null);
-const selectedMood = ref("");
+const selectedAnswer = ref("");
 const feedback = ref(null);
 const isRoundLoading = ref(false);
 const gameOver = ref(false);
@@ -129,6 +130,7 @@ const lastRoundSource = ref(null);
 const aiError = ref("");
 const hasStarted = ref(false);
 const isClientReady = ref(false);
+const usedRoundTypes = ref([]);
 
 const postsLoading = computed(() => Boolean(loading?.value));
 const isPageLoading = computed(
@@ -138,7 +140,7 @@ const playablePosts = computed(() =>
   (posts.value || []).filter((post) => extractPlainText(post.body).length > 30)
 );
 const finalMessage = computed(() => {
-  if (score.value >= 80) return "Вы очень тонко слышите настроение строк.";
+  if (score.value >= 80) return "Вы очень тонко читаете оттенки строк.";
   if (score.value >= 40) return "Вы внимательно читаете и чувствуете оттенки.";
   return "Поэзия всегда оставляет место для другого прочтения.";
 });
@@ -149,7 +151,7 @@ useHead({
     {
       name: "description",
       content:
-        "Спокойная литературная игра: прочитайте короткий фрагмент стихотворения и выберите настроение, которое звучит в нём сильнее всего.",
+        "Спокойная литературная игра: прочитайте короткий фрагмент стихотворения и ответьте на внимательный вопрос о тексте.",
     },
   ],
 });
@@ -202,18 +204,20 @@ const buildFallbackRound = (post) => {
   const text = extractPlainText(post?.body);
 
   return {
+    roundType: "mood",
+    roundLabel: "Настроение",
     excerpt: getFallbackExcerpt(text),
-    question: "Какое настроение звучит в этих строках?",
-    correctMood: "Покой",
+    question: "Какое настроение ближе всего к этому фрагменту?",
+    correctAnswer: "Покой",
     options: ["Светлая грусть", "Покой", "Надежда", "Тревога"],
     explanation:
-      "Этот раунд создан без AI. Попробуйте выбрать настроение, которое вам ближе.",
+      "Этот раунд создан без AI. Выберите настроение, которое вам ближе.",
     sourceTitle,
     sourceSlug,
   };
 };
 
-const fetchAiRound = async (post) => {
+const fetchAiRound = async (post, avoidRoundTypes = []) => {
   const response = await fetch("/.netlify/functions/aiMoodGameRound", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -221,6 +225,7 @@ const fetchAiRound = async (post) => {
       title: post.title || "Стихотворение",
       slug: getPostSlug(post),
       text: extractPlainText(post.body),
+      avoidRoundTypes,
     }),
   });
 
@@ -228,29 +233,68 @@ const fetchAiRound = async (post) => {
     throw new Error("AI endpoint unavailable");
   }
 
-  return response.json();
+  const rawText = await response.text();
+
+  try {
+    return JSON.parse(rawText);
+  } catch (error) {
+    const start = rawText.indexOf("{");
+    const end = rawText.lastIndexOf("}");
+
+    if (start === -1 || end === -1 || end <= start) {
+      throw error;
+    }
+
+    return JSON.parse(rawText.slice(start, end + 1));
+  }
 };
 
 const normalizeRound = (round, post) => {
+  const allowedRoundLabels = {
+    mood: "Настроение",
+    theme: "Тема",
+    main_word: "Главное слово",
+    missing_word: "Пропущенное слово",
+  };
   const sourceTitle = round?.sourceTitle || post?.title || "Стихотворение";
   const sourceSlug = round?.sourceSlug || getPostSlug(post);
-  const options = Array.isArray(round?.options) ? round.options.filter(Boolean).slice(0, 4) : [];
+  const roundType = typeof round?.roundType === "string" ? round.roundType.trim() : "";
+  const roundLabel =
+    typeof round?.roundLabel === "string" ? round.roundLabel.trim() : "";
+  const rawOptions = Array.isArray(round?.options) ? round.options : [];
+  const options = rawOptions
+    .map((option) => (typeof option === "string" ? option.trim() : ""))
+    .filter(Boolean);
+  const correctAnswer =
+    typeof round?.correctAnswer === "string" ? round.correctAnswer.trim() : "";
+  const explanation =
+    typeof round?.explanation === "string" ? round.explanation.trim() : "";
 
   if (
-    !round?.excerpt ||
-    !round?.correctMood ||
+    !allowedRoundLabels[roundType] ||
+    roundLabel !== allowedRoundLabels[roundType] ||
+    typeof round?.excerpt !== "string" ||
+    !round.excerpt.trim() ||
+    typeof round?.question !== "string" ||
+    !round.question.trim() ||
+    !correctAnswer ||
+    !explanation ||
+    rawOptions.some((option) => typeof option !== "string") ||
     options.length !== 4 ||
-    !options.includes(round.correctMood)
+    new Set(options).size !== 4 ||
+    !options.includes(correctAnswer)
   ) {
     throw new Error("Invalid round data");
   }
 
   return {
-    excerpt: round.excerpt,
-    question: round.question || "Какое настроение звучит в этих строках?",
-    correctMood: round.correctMood,
+    roundType,
+    roundLabel,
+    excerpt: round.excerpt.trim(),
+    question: round.question.trim(),
+    correctAnswer,
     options,
-    explanation: round.explanation || "В этих строках особенно чувствуется это настроение.",
+    explanation,
     sourceTitle,
     sourceSlug,
   };
@@ -260,7 +304,7 @@ const loadRound = async () => {
   const post = pickRandomPost();
 
   currentGameRound.value = null;
-  selectedMood.value = "";
+  selectedAnswer.value = "";
   feedback.value = null;
   aiError.value = "";
 
@@ -272,12 +316,19 @@ const loadRound = async () => {
   isRoundLoading.value = true;
 
   try {
-    currentGameRound.value = normalizeRound(await fetchAiRound(post), post);
+    currentGameRound.value = normalizeRound(
+      await fetchAiRound(post, usedRoundTypes.value),
+      post
+    );
   } catch (error) {
-    console.warn("Using local mood-game fallback:", error);
+    console.warn("Using local poem-game fallback:", error);
     currentGameRound.value = buildFallbackRound(post);
     aiError.value = "Этот раунд создан без AI: попробуйте выбрать настроение, которое вам ближе.";
   } finally {
+    if (currentGameRound.value?.roundType) {
+      usedRoundTypes.value = [...usedRoundTypes.value, currentGameRound.value.roundType];
+    }
+
     lastRoundSource.value = {
       sourceTitle: currentGameRound.value?.sourceTitle || post.title,
       sourceSlug: currentGameRound.value?.sourceSlug || getPostSlug(post),
@@ -291,6 +342,7 @@ const startGame = async () => {
   currentRound.value = 1;
   gameOver.value = false;
   lastRoundSource.value = null;
+  usedRoundTypes.value = [];
   await loadRound();
 };
 
@@ -298,11 +350,11 @@ const restartGame = async () => {
   await startGame();
 };
 
-const selectMood = (mood) => {
-  if (!currentGameRound.value || selectedMood.value) return;
+const selectAnswer = (answer) => {
+  if (!currentGameRound.value || selectedAnswer.value) return;
 
-  selectedMood.value = mood;
-  const isCorrect = mood === currentGameRound.value.correctMood;
+  selectedAnswer.value = answer;
+  const isCorrect = answer === currentGameRound.value.correctAnswer;
 
   if (isCorrect) {
     score.value += 20;
@@ -311,8 +363,8 @@ const selectMood = (mood) => {
   feedback.value = {
     isCorrect,
     message: isCorrect
-      ? "Да, это настроение здесь звучит особенно сильно."
-      : "Интересный выбор. Но в этих строках сильнее звучит другое настроение.",
+      ? "Да, это прочтение очень близко к строкам."
+      : `Интересный выбор. В этом раунде ближе всего — «${currentGameRound.value.correctAnswer}».`,
     explanation: currentGameRound.value.explanation,
   };
 };
@@ -328,15 +380,15 @@ const goToNextRound = async () => {
 };
 
 const getOptionClass = (option) => {
-  if (!selectedMood.value) {
+  if (!selectedAnswer.value) {
     return "border-stone-200 bg-white text-stone-800 hover:border-amber-300 hover:bg-amber-50 dark:border-stone-800 dark:bg-gray-950/70 dark:text-stone-100 dark:hover:border-amber-500/70 dark:hover:bg-amber-950/20";
   }
 
-  if (option === currentGameRound.value?.correctMood) {
+  if (option === currentGameRound.value?.correctAnswer) {
     return "border-amber-400 bg-amber-50 text-stone-950 dark:border-amber-300 dark:bg-amber-950/30 dark:text-stone-50";
   }
 
-  if (option === selectedMood.value) {
+  if (option === selectedAnswer.value) {
     return "border-stone-300 bg-stone-100 text-stone-600 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-400";
   }
 
